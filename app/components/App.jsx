@@ -18,7 +18,7 @@ const App = React.createClass({
           <Route component={Nav} path="/" >
             <IndexRoute component={Welcome} />
             <Route component={Puzzles} path="puzzles" />
-            <Route component={Puzzle} path="puzzle" />
+            <Route component={Puzzle} path="puzzle/:puzzleId" />
           </Route>
         </Router>
       </MuiThemeProvider>

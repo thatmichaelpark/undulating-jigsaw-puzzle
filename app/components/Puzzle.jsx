@@ -4,7 +4,7 @@ const Puzzle = React.createClass({
   render() {
     return (
       <div>
-        Puzzle
+        Puzzle {this.props.params.puzzleId}
       </div>
     );
   }

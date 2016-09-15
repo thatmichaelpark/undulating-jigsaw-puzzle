@@ -26,7 +26,7 @@ const Nav = React.createClass({
     this.setState({ signupIsOpen: true });
   },
   handleTitleTouchTap() {
-    this.props.router.push('/');
+    this.props.router.push('/puzzles');
   },
   handleLoginOk() {
     this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
@@ -72,7 +72,7 @@ const Nav = React.createClass({
         )}
         </AppBar>
         <div>
-          [{this.props.children}]
+          {this.props.children}
         </div>
         <Login
           handleCancel={this.handleLoginCancel}
