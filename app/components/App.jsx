@@ -5,7 +5,6 @@ import Nav from 'components/Nav';
 import Puzzle from 'components/Puzzle';
 import Puzzles from 'components/Puzzles';
 import React from 'react';
-import Signup from 'components/Signup';
 import Welcome from 'components/Welcome';
 
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
@@ -18,7 +17,6 @@ const App = React.createClass({
         <Router history={browserHistory}>
           <Route component={Nav} path="/" >
             <IndexRoute component={Welcome} />
-            <Route component={Signup} path="signup" />
             <Route component={Puzzles} path="puzzles" />
             <Route component={Puzzle} path="puzzle" />
           </Route>
