@@ -1,6 +1,5 @@
 import { IndexRoute, Route, Router, browserHistory } from 'react-router';
 import Home from 'components/Home';
-import Login from 'components/Login';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Nav from 'components/Nav';
 import Puzzle from 'components/Puzzle';
@@ -19,7 +18,6 @@ const App = React.createClass({
         <Router history={browserHistory}>
           <Route component={Nav} path="/" >
             <IndexRoute component={Welcome} />
-            <Route component={Login} path="login" />
             <Route component={Signup} path="signup" />
             <Route component={Puzzles} path="puzzles" />
             <Route component={Puzzle} path="puzzle" />

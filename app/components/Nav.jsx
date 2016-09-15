@@ -1,6 +1,7 @@
 import AppBar from 'material-ui/AppBar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Login from 'components/Login'
 import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import { withRouter } from 'react-router';
@@ -45,19 +46,6 @@ const Nav = React.createClass({
     this.setState({ snackbarIsOpen: false });
   },
   render() {
-    const loginActions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleLoginCancel}
-      />,
-      <FlatButton
-        label="OK"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleLoginOk}
-      />,
-    ];
     const signupActions = [
       <FlatButton
         label="Cancel"
@@ -98,14 +86,11 @@ const Nav = React.createClass({
         <div>
           [{this.props.children}]
         </div>
-        <Dialog
-          title="Login Dialog"
-          actions={loginActions}
-          modal={true}
+        <Login
+          handleCancel={this.handleLoginCancel}
+          handleOk={this.handleLoginOk}
           open={this.state.loginIsOpen}
-        >
-          Login stuff goes here.
-        </Dialog>
+        />
         <Dialog
           title="Signup Dialog"
           actions={signupActions}
