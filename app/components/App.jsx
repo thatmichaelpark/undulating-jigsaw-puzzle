@@ -1,5 +1,4 @@
 import { IndexRoute, Route, Router, browserHistory } from 'react-router';
-import Home from 'components/Home';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Nav from 'components/Nav';
 import Puzzle from 'components/Puzzle';
