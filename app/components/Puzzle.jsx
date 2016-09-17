@@ -27,7 +27,7 @@ const Piece = React.createClass({
 
   paint: function(ctx) {
     const {i, j, x, y} = this.state;
-    const {tileSize} = this.props;
+    const {scaleFactor, tileSize} = this.props;
 
     const w = [];
     for (let u=0; u<pieceContentSize; ++u) {
@@ -61,8 +61,8 @@ const Piece = React.createClass({
     ctx.closePath();
     ctx.fill();
 
-    const x0 = maxWaveDepth + j * tileSize;
-    const y0 = maxWaveDepth + i * tileSize;
+    const x0 = (maxWaveDepth + j * pieceContentSize) * scaleFactor;
+    const y0 = (maxWaveDepth + i * pieceContentSize) * scaleFactor;
     const size = tileSize * pieceActualSize / pieceContentSize;
     const d = (size - tileSize) / 2;
 
@@ -86,8 +86,8 @@ const Piece = React.createClass({
 
 });
 
-const rows = 3;
-const cols = 3;
+const rows = 2;
+const cols = 2;
 const pieceContentSize = 100;
 const maxWaveDepth = 20;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
@@ -141,19 +141,19 @@ var Puzzle = React.createClass({
     this.state.img.src = 'http://placekitten.com/800/800';
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
-      const d = maxWaveDepth * 2 * pieceActualSize / pieceContentSize;
-      const prospectiveTileWidth = Math.floor((width - d) / cols);
-      const prospectiveTileHeight = Math.floor((height - d) / rows);
-      const tileSize = Math.min(prospectiveTileWidth, prospectiveTileHeight);
+      const scaleFactor = Math.min(
+        width / (maxWaveDepth * 2 + pieceContentSize * cols),
+        height / (maxWaveDepth * 2 + pieceContentSize * rows)
+      );
+      const tileSize = pieceContentSize * scaleFactor;
 
-      this.setState({ tileSize });
-      console.log(this.state.tileSize);
+      this.setState({ scaleFactor, tileSize });
       this.setState({
         pieces: [
-          <Piece i={0} j={0} x={100} y={200} img={this.state.img} tileSize={this.state.tileSize}/>,
-          <Piece i={0} j={1} x={281} y={200} img={this.state.img} tileSize={this.state.tileSize}/>,
-          <Piece i={1} j={0} x={100} y={401} img={this.state.img} tileSize={this.state.tileSize}/>,
-          <Piece i={1} j={1} x={281} y={401} img={this.state.img} tileSize={this.state.tileSize}/>
+          <Piece i={0} j={0} x={100} y={200} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
+          <Piece i={0} j={1} x={201} y={200} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
+          <Piece i={1} j={0} x={100} y={301} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
+          <Piece i={1} j={1} x={201} y={301} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>
         ]
       });
     });
