@@ -3,17 +3,7 @@ import ReactDOM from 'react-dom';
 
 // https://gist.github.com/sebmarkbage/6f7da234174ab9f64cce
 
-
 const Piece = React.createClass({
-  getInitialState() {
-    return {
-      i: this.props.i,
-      j: this.props.j,
-      x: this.props.x,
-      y: this.props.y
-    };
-  },
-
   componentDidMount: function() {
     var ctx = ReactDOM.findDOMNode(this).getContext('2d');
     this.paint(ctx);
@@ -26,14 +16,15 @@ const Piece = React.createClass({
   },
 
   paint: function(ctx) {
-    const {i, j, x, y} = this.state;
+    const {i, j, x, y, time} = this.props;
     const {scaleFactor, tileSize} = this.props;
 
     const w = [];
     for (let u=0; u<pieceContentSize; ++u) {
-      w.push(-maxWaveDepth * Math.sin(u / pieceContentSize * Math.PI));
+      w.push(-maxWaveDepth * Math.sin(u / pieceContentSize * Math.PI) * Math.cos(time));
     }
 
+    // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     ctx.save();
     ctx.translate(maxWaveDepth, maxWaveDepth);
     ctx.beginPath();
@@ -51,15 +42,9 @@ const Piece = React.createClass({
       ctx.lineTo(u, w[u]);
     }
     ctx.closePath();
-    ctx.restore();
+    ctx.stroke();;;
     ctx.clip();
-
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo(0, pieceActualSize);
-    ctx.lineTo(pieceActualSize, pieceActualSize);
-    ctx.closePath();
-    ctx.fill();
+    ctx.translate(-maxWaveDepth, -maxWaveDepth);
 
     const x0 = (maxWaveDepth + j * pieceContentSize) * scaleFactor;
     const y0 = (maxWaveDepth + i * pieceContentSize) * scaleFactor;
@@ -70,24 +55,26 @@ const Piece = React.createClass({
       x0 - d, y0 - d,
       size, size,
       0, 0,
-      pieceActualSize, pieceActualSize);
+      pieceActualSize, pieceActualSize
+    );
+    ctx.restore();
   },
 
   render: function() {
-    const {x, y} = this.state;
+    const {x, y} = this.props;
     const style = {
       position: 'absolute',
       left: x - pieceActualSize / 2,
       top: y - pieceActualSize / 2,
-      outline: '1px solid green'
+      // outline: '1px solid green'
     }
     return <canvas style={style} width={pieceActualSize} height={pieceActualSize} />;
   }
 
 });
 
-const rows = 2;
-const cols = 2;
+const rows = 4;
+const cols = 4;
 const pieceContentSize = 100;
 const maxWaveDepth = 20;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
@@ -129,11 +116,24 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 var Puzzle = React.createClass({
 
   getInitialState: function() {
+    const pieces = [];
+    for (let i=0; i<rows; ++i) {
+      for (let j=0; j<cols; ++j) {
+        pieces.push({
+          i,
+          j,
+          x: 100 + j * (pieceContentSize + 1),
+          y: 150 + i * (pieceContentSize + 1)
+        });
+      }
+    }
     return {
       img: document.createElement('img'),
+      imgLoaded: false,
       waveHorizontalData: createWaveData(rows),
       waveVerticalData: createWaveData(cols),
-      pieces: []
+      pieces,
+      time: 0
     };
   },
 
@@ -147,16 +147,14 @@ var Puzzle = React.createClass({
       );
       const tileSize = pieceContentSize * scaleFactor;
 
-      this.setState({ scaleFactor, tileSize });
-      this.setState({
-        pieces: [
-          <Piece i={0} j={0} x={100} y={200} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
-          <Piece i={0} j={1} x={201} y={200} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
-          <Piece i={1} j={0} x={100} y={301} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>,
-          <Piece i={1} j={1} x={201} y={301} img={this.state.img} scaleFactor = {this.state.scaleFactor} tileSize={this.state.tileSize}/>
-        ]
-      });
+      this.setState({ scaleFactor, tileSize, imgLoaded: true });
+      requestAnimationFrame(this.tick);
     });
+  },
+
+  tick(ms) {
+    this.setState({ time: ms * 0.001 });
+    requestAnimationFrame(this.tick);
   },
 
   handleMouseDown() {
@@ -181,10 +179,24 @@ var Puzzle = React.createClass({
         onMouseDown={this.handleMouseDown}
         onMouseLeave={this.handleMouseLeave}
       >
-        <h6>Howdy</h6>
-        <h1>Howdy</h1>
-        <h2>Howdy</h2>
-        {this.state.pieces}
+        {this.state.imgLoaded ? (
+          this.state.pieces.map((piece, index) => {
+            return (
+              <Piece
+                key={index}
+                i={piece.i}
+                j={piece.j}
+                x={piece.x}
+                y={piece.y}
+                img={this.state.img}
+                scaleFactor={this.state.scaleFactor}
+                tileSize={this.state.tileSize}
+                time={this.state.time}
+              />
+            );
+          }))
+           : null
+        }
       </div>
     );
   }
