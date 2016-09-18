@@ -4,18 +4,19 @@ import ReactDOM from 'react-dom';
 // https://gist.github.com/sebmarkbage/6f7da234174ab9f64cce
 
 const Piece = React.createClass({
-  componentDidMount: function() {
+
+  componentDidMount() {
     var ctx = ReactDOM.findDOMNode(this).getContext('2d');
     this.paint(ctx);
   },
 
-  componentDidUpdate: function() {
+  componentDidUpdate() {
     var ctx = ReactDOM.findDOMNode(this).getContext('2d');
     ctx.clearRect(0, 0, 200, 200);
     this.paint(ctx);
   },
 
-  paint: function(ctx) {
+  paint(ctx) {
     const {i, j, x, y, time, verticalWaves, horizontalWaves} = this.props;
     const {scaleFactor, tileSize} = this.props;
 
@@ -56,15 +57,22 @@ const Piece = React.createClass({
     ctx.restore();
   },
 
-  render: function() {
-    const {x, y} = this.props;
+  render() {
+    const {x, y, rot} = this.props;
     const style = {
       position: 'absolute',
       left: x - pieceActualSize / 2,
       top: y - pieceActualSize / 2,
+      transform: `rotate(${rot}deg)`
       // outline: '1px solid green'
     }
-    return <canvas style={style} width={pieceActualSize} height={pieceActualSize} />;
+    return (
+      <canvas
+        style={style}
+        width={pieceActualSize}
+        height={pieceActualSize}
+      />
+    );
   }
 
 });
@@ -75,6 +83,43 @@ const pieceContentSize = 150;
 const maxWaveDepth = 10;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
 const nWaves = 3;
+
+const hitTest = function(mx, my, px, py, rot, i, j) {
+// mx, my: mouse coordinates
+// px, py: piece center coordinates
+// rot: piece's rotation (0, 90, 180, or 270)
+// i, j: piece's position in puzzle
+// Return true if (mx, my) hits the piece.
+  const dx = mx - px;
+  const dy = my - py;
+  let u = pieceContentSize / 2;
+  let v = pieceContentSize / 2;
+
+  switch(rot) {
+    case 0:
+      u += dx;
+      v += dy;
+      break;
+    case 90:
+      u += dy;
+      v -= dx;
+      break;
+    case 180:
+      u -= dx;
+      v -= dy;
+      break;
+    default: // 270
+      u -= dy;
+      v += dx;
+      break;
+  }
+  const l = 0; // left
+  const r = 20; // right
+  const t = 0; // top
+  const b = 20; // bottom
+  return l < u && u < r && t < v && v < b;
+};
+
 
 const createWaveData = (n) => {
   const waveData = [];
@@ -111,7 +156,7 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 
 var Puzzle = React.createClass({
 
-  getInitialState: function() {
+  getInitialState() {
     const pieces = [];
     for (let i=0; i<rows; ++i) {
       for (let j=0; j<cols; ++j) {
@@ -119,7 +164,8 @@ var Puzzle = React.createClass({
           i,
           j,
           x: 100 + j * (pieceContentSize + 10),
-          y: 170 + i * (pieceContentSize + 10)
+          y: 170 + i * (pieceContentSize + 10),
+          rot: 0  // 0, 90, 180, 270
         });
       }
     }
@@ -144,7 +190,7 @@ var Puzzle = React.createClass({
     };
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     this.state.img.src = 'http://placekitten.com/800/800';
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
@@ -171,15 +217,20 @@ var Puzzle = React.createClass({
     requestAnimationFrame(this.tick);
   },
 
-  handleMouseDown() {
+  handleMouseDown(event) {
     console.log('down');
+    this.state.pieces.forEach((piece) => {
+      if (hitTest(event.pageX, event.pageY, piece.x, piece.y, piece.rot, piece.i, piece.j)) {
+        console.log(piece.i, piece.j);
+      }
+    })
   },
 
   handleMouseLeave() {
     console.log('Leave');
   },
 
-  render: function() {
+  render() {
     const style = {
       width: '100%',
       top: 0,
@@ -202,6 +253,7 @@ var Puzzle = React.createClass({
                 j={piece.j}
                 x={piece.x}
                 y={piece.y}
+                rot={piece.rot}
                 img={this.state.img}
                 scaleFactor={this.state.scaleFactor}
                 tileSize={this.state.tileSize}
