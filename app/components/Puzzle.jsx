@@ -16,33 +16,29 @@ const Piece = React.createClass({
   },
 
   paint: function(ctx) {
-    const {i, j, x, y, time} = this.props;
+    const {i, j, x, y, time, verticalWaves, horizontalWaves} = this.props;
     const {scaleFactor, tileSize} = this.props;
-
-    const w = [];
-    for (let u=0; u<pieceContentSize; ++u) {
-      w.push(-maxWaveDepth * Math.sin(u / pieceContentSize * Math.PI) * Math.cos(time));
-    }
 
     // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     ctx.save();
     ctx.translate(maxWaveDepth, maxWaveDepth);
+
     ctx.beginPath();
     ctx.moveTo(0, 0);
     for (let u=0; u<pieceContentSize; ++u){
-      ctx.lineTo(w[u], u);
+      ctx.lineTo(verticalWaves[j][i * pieceContentSize + u], u);
     }
     for (let u=0; u<pieceContentSize; ++u) {
-      ctx.lineTo(u, pieceContentSize + w[u]);
+      ctx.lineTo(u, pieceContentSize + horizontalWaves[i + 1][j * pieceContentSize + u]);
     }
     for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(pieceContentSize + w[u], u);
+      ctx.lineTo(pieceContentSize + verticalWaves[j + 1][i * pieceContentSize + u], u);
     }
     for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(u, w[u]);
+      ctx.lineTo(u, horizontalWaves[i][j * pieceContentSize + u]);
     }
     ctx.closePath();
-    ctx.stroke();;;
+    ctx.stroke();
     ctx.clip();
     ctx.translate(-maxWaveDepth, -maxWaveDepth);
 
@@ -75,10 +71,10 @@ const Piece = React.createClass({
 
 const rows = 4;
 const cols = 4;
-const pieceContentSize = 100;
-const maxWaveDepth = 20;
+const pieceContentSize = 150;
+const maxWaveDepth = 10;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
-const nWaves = 1;
+const nWaves = 3;
 
 const createWaveData = (n) => {
   const waveData = [];
@@ -87,8 +83,8 @@ const createWaveData = (n) => {
     let maxDepth = 0;
     for (let k=0; k<nWaves; ++k) {
       const a = (Math.random() - 0.5);
-      const f = Math.random() * 1;
-      const v = (Math.random() - 0.5) * 1;
+      const f = Math.random() * 5;
+      const v = (Math.random() - 0.5) * 10;
       maxDepth += Math.abs(a);
       waveDatum.push({ a, f, v });
     }
@@ -122,18 +118,29 @@ var Puzzle = React.createClass({
         pieces.push({
           i,
           j,
-          x: 100 + j * (pieceContentSize + 1),
-          y: 150 + i * (pieceContentSize + 1)
+          x: 100 + j * (pieceContentSize + 10),
+          y: 170 + i * (pieceContentSize + 10)
         });
       }
     }
+    const waveHorizontalData = createWaveData(rows);
+    const waveVerticalData = createWaveData(cols);
+    const time = 0;
+    const verticalWaves = waveVerticalData.map((waveData) => {
+      return generateWaves(waveData, pieceContentSize, cols, time);
+    });
+    const horizontalWaves = waveHorizontalData.map((waveData) => {
+      return generateWaves(waveData, pieceContentSize, rows, time);
+    });
     return {
       img: document.createElement('img'),
       imgLoaded: false,
-      waveHorizontalData: createWaveData(rows),
-      waveVerticalData: createWaveData(cols),
+      waveHorizontalData,
+      waveVerticalData,
       pieces,
-      time: 0
+      time: 0,
+      verticalWaves,
+      horizontalWaves
     };
   },
 
@@ -153,7 +160,14 @@ var Puzzle = React.createClass({
   },
 
   tick(ms) {
-    this.setState({ time: ms * 0.001 });
+    const time = ms * 0.001;
+    const verticalWaves = this.state.waveVerticalData.map((waveData) => {
+      return generateWaves(waveData, pieceContentSize, cols, time);
+    });
+    const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
+      return generateWaves(waveData, pieceContentSize, rows, time);
+    });
+    this.setState({ time, verticalWaves, horizontalWaves });
     requestAnimationFrame(this.tick);
   },
 
@@ -192,6 +206,8 @@ var Puzzle = React.createClass({
                 scaleFactor={this.state.scaleFactor}
                 tileSize={this.state.tileSize}
                 time={this.state.time}
+                verticalWaves={this.state.verticalWaves}
+                horizontalWaves={this.state.horizontalWaves}
               />
             );
           }))
