@@ -17,7 +17,7 @@ const Piece = React.createClass({
   },
 
   paint(ctx) {
-    const {i, j, x, y, time, verticalWaves, horizontalWaves} = this.props;
+    const {row, col, x, y, time, verticalWaves, horizontalWaves} = this.props;
     const {scaleFactor, tileSize} = this.props;
 
     // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
@@ -27,24 +27,24 @@ const Piece = React.createClass({
     ctx.beginPath();
     ctx.moveTo(0, 0);
     for (let u=0; u<pieceContentSize; ++u){
-      ctx.lineTo(verticalWaves[j][i * pieceContentSize + u], u);
+      ctx.lineTo(verticalWaves[col][row * pieceContentSize + u], u);
     }
     for (let u=0; u<pieceContentSize; ++u) {
-      ctx.lineTo(u, pieceContentSize + horizontalWaves[i + 1][j * pieceContentSize + u]);
+      ctx.lineTo(u, pieceContentSize + horizontalWaves[row + 1][col * pieceContentSize + u]);
     }
     for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(pieceContentSize + verticalWaves[j + 1][i * pieceContentSize + u], u);
+      ctx.lineTo(pieceContentSize + verticalWaves[col + 1][row * pieceContentSize + u], u);
     }
     for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(u, horizontalWaves[i][j * pieceContentSize + u]);
+      ctx.lineTo(u, horizontalWaves[row][col * pieceContentSize + u]);
     }
     ctx.closePath();
     ctx.stroke();
     ctx.clip();
     ctx.translate(-maxWaveDepth, -maxWaveDepth);
 
-    const x0 = (maxWaveDepth + j * pieceContentSize) * scaleFactor;
-    const y0 = (maxWaveDepth + i * pieceContentSize) * scaleFactor;
+    const x0 = (maxWaveDepth + col * pieceContentSize) * scaleFactor;
+    const y0 = (maxWaveDepth + row * pieceContentSize) * scaleFactor;
     const size = tileSize * pieceActualSize / pieceContentSize;
     const d = (size - tileSize) / 2;
 
@@ -77,21 +77,21 @@ const Piece = React.createClass({
 
 });
 
-const rows = 4;
-const cols = 4;
+const nRows = 4;
+const nCols = 4;
 const pieceContentSize = 150;
 const maxWaveDepth = 10;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
 const nWaves = 3;
 
-const hitTest = function(mx, my, px, py, rot, i, j) {
+const hitTest = function(mx, my, piece) {
 // mx, my: mouse coordinates
-// px, py: piece center coordinates
-// rot: piece's rotation (0, 90, 180, or 270)
-// i, j: piece's position in puzzle
+// piece.x, piece.y: piece center coordinates
+// piece.rot: piece's rotation (0, 90, 180, or 270)
 // Return true if (mx, my) hits the piece.
-  const dx = mx - px;
-  const dy = my - py;
+  const { x, y, rot } = piece;
+  const dx = mx - x;
+  const dy = my - y;
   let u = pieceContentSize / 2;
   let v = pieceContentSize / 2;
 
@@ -157,36 +157,35 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 var Puzzle = React.createClass({
 
   getInitialState() {
-    console.log(this.props.params.puzzleId);
-    const pieces = [];
-    for (let i=0; i<rows; ++i) {
-      for (let j=0; j<cols; ++j) {
-        pieces.push({
-          i,
-          j,
-          x: 100 + j * (pieceContentSize - 30),
-          y: 170 + i * (pieceContentSize - 30),
+    const pieceData = [];
+    for (let row=0; row<nRows; ++row) {
+      for (let col=0; col<nCols; ++col) {
+        pieceData.push({
+          row,
+          col,
+          x: 100 + col * (pieceContentSize - 30),
+          y: 170 + row * (pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
         });
       }
     }
-    const sortedPieces = pieces.slice(); // copy
-    const waveHorizontalData = createWaveData(rows);
-    const waveVerticalData = createWaveData(cols);
+    const sortedPieceData = pieceData.slice(); // copy
+    const waveHorizontalData = createWaveData(nRows);
+    const waveVerticalData = createWaveData(nCols);
     const time = 0;
     const verticalWaves = waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, cols, time);
+      return generateWaves(waveData, pieceContentSize, nCols, time);
     });
     const horizontalWaves = waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, rows, time);
+      return generateWaves(waveData, pieceContentSize, nRows, time);
     });
     return {
       img: document.createElement('img'),
       imgLoaded: false,
       waveHorizontalData,
       waveVerticalData,
-      pieces,
-      sortedPieces,
+      pieceData,
+      sortedPieceData,
       time: 0,
       verticalWaves,
       horizontalWaves
@@ -198,8 +197,8 @@ var Puzzle = React.createClass({
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
       const scaleFactor = Math.min(
-        width / (maxWaveDepth * 2 + pieceContentSize * cols),
-        height / (maxWaveDepth * 2 + pieceContentSize * rows)
+        width / (maxWaveDepth * 2 + pieceContentSize * nCols),
+        height / (maxWaveDepth * 2 + pieceContentSize * nRows)
       );
       const tileSize = pieceContentSize * scaleFactor;
 
@@ -211,10 +210,10 @@ var Puzzle = React.createClass({
   tick(ms) {
     const time = ms * 0.001;
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, cols, time);
+      return generateWaves(waveData, pieceContentSize, nCols, time);
     });
     const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, rows, time);
+      return generateWaves(waveData, pieceContentSize, nRows, time);
     });
     this.setState({ time, verticalWaves, horizontalWaves });
     requestAnimationFrame(this.tick);
@@ -225,20 +224,20 @@ var Puzzle = React.createClass({
   my0: 0,
 
   handleMouseDown(event) {
-    const { sortedPieces } = this.state;
+    const { sortedPieceData } = this.state;
 
-    for (let i=sortedPieces.length; --i >= 0;) {
-      const piece = sortedPieces[i];
-      if (hitTest(event.pageX, event.pageY, piece.x, piece.y, piece.rot, piece.i, piece.j)) {
+    for (let i=sortedPieceData.length; --i >= 0;) {
+      const piece = sortedPieceData[i];
+      if (hitTest(event.pageX, event.pageY, piece)) {
         // bring hit piece to top
-        const s = sortedPieces.slice(); // copy
+        const s = sortedPieceData.slice(); // copy
         const left = (s.slice(0, i))
       	const right = (s.slice(i))
       	right.push(right.shift())
         this.mx0 = event.pageX;
         this.my0 = event.pageY;
         this.isDragging = true;
-        this.setState({ sortedPieces: left.concat(right) });
+        this.setState({ sortedPieceData: left.concat(right) });
         break;
       }
     }
@@ -252,15 +251,15 @@ var Puzzle = React.createClass({
     const dy = event.pageY - this.my0;
     this.mx0 = event.pageX;
     this.my0 = event.pageY;
-    const s = this.state.sortedPieces.slice(); // copy
+    const s = this.state.sortedPieceData.slice(); // copy
     const top = s[s.length - 1];
     top.x += dx;
     top.y += dy;
-    this.setState({ sortedPieces: s });
+    this.setState({ sortedPieceData: s });
   },
 
   handleMouseUp(event) {
-    this.isDragging = false;;;
+    this.isDragging = false;
   },
 
   render() {
@@ -280,12 +279,12 @@ var Puzzle = React.createClass({
         onMouseLeave={this.handleMouseUp}
       >
         {this.state.imgLoaded ? (
-          this.state.sortedPieces.map((piece, index) => {
+          this.state.sortedPieceData.map((piece, index) => {
             return (
               <Piece
                 key={index}
-                i={piece.i}
-                j={piece.j}
+                row={piece.row}
+                col={piece.col}
                 x={piece.x}
                 y={piece.y}
                 rot={piece.rot}
