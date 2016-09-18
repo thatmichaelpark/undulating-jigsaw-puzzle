@@ -114,9 +114,9 @@ const hitTest = function(mx, my, px, py, rot, i, j) {
       break;
   }
   const l = 0; // left
-  const r = 20; // right
+  const r = pieceContentSize; // right
   const t = 0; // top
-  const b = 20; // bottom
+  const b = pieceContentSize; // bottom
   return l < u && u < r && t < v && v < b;
 };
 
@@ -157,18 +157,20 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 var Puzzle = React.createClass({
 
   getInitialState() {
+    console.log(this.props.params.puzzleId);
     const pieces = [];
     for (let i=0; i<rows; ++i) {
       for (let j=0; j<cols; ++j) {
         pieces.push({
           i,
           j,
-          x: 100 + j * (pieceContentSize + 10),
-          y: 170 + i * (pieceContentSize + 10),
+          x: 100 + j * (pieceContentSize - 30),
+          y: 170 + i * (pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
         });
       }
     }
+    const sortedPieces = pieces.slice(); // copy
     const waveHorizontalData = createWaveData(rows);
     const waveVerticalData = createWaveData(cols);
     const time = 0;
@@ -184,6 +186,7 @@ var Puzzle = React.createClass({
       waveHorizontalData,
       waveVerticalData,
       pieces,
+      sortedPieces,
       time: 0,
       verticalWaves,
       horizontalWaves
@@ -217,17 +220,47 @@ var Puzzle = React.createClass({
     requestAnimationFrame(this.tick);
   },
 
+  isDragging: false,
+  mx0: 0,
+  my0: 0,
+
   handleMouseDown(event) {
-    console.log('down');
-    this.state.pieces.forEach((piece) => {
+    const { sortedPieces } = this.state;
+
+    for (let i=sortedPieces.length; --i >= 0;) {
+      const piece = sortedPieces[i];
       if (hitTest(event.pageX, event.pageY, piece.x, piece.y, piece.rot, piece.i, piece.j)) {
-        console.log(piece.i, piece.j);
+        // bring hit piece to top
+        const s = sortedPieces.slice(); // copy
+        const left = (s.slice(0, i))
+      	const right = (s.slice(i))
+      	right.push(right.shift())
+        this.mx0 = event.pageX;
+        this.my0 = event.pageY;
+        this.isDragging = true;
+        this.setState({ sortedPieces: left.concat(right) });
+        break;
       }
-    })
+    }
   },
 
-  handleMouseLeave() {
-    console.log('Leave');
+  handleMouseMove(event) {
+    if (!this.isDragging) {
+      return;
+    }
+    const dx = event.pageX - this.mx0;
+    const dy = event.pageY - this.my0;
+    this.mx0 = event.pageX;
+    this.my0 = event.pageY;
+    const s = this.state.sortedPieces.slice(); // copy
+    const top = s[s.length - 1];
+    top.x += dx;
+    top.y += dy;
+    this.setState({ sortedPieces: s });
+  },
+
+  handleMouseUp(event) {
+    this.isDragging = false;;;
   },
 
   render() {
@@ -242,10 +275,12 @@ var Puzzle = React.createClass({
       <div
         style={style}
         onMouseDown={this.handleMouseDown}
-        onMouseLeave={this.handleMouseLeave}
+        onMouseMove={this.handleMouseMove}
+        onMouseUp={this.handleMouseUp}
+        onMouseLeave={this.handleMouseUp}
       >
         {this.state.imgLoaded ? (
-          this.state.pieces.map((piece, index) => {
+          this.state.sortedPieces.map((piece, index) => {
             return (
               <Piece
                 key={index}
