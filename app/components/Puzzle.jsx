@@ -301,24 +301,30 @@ const Puzzle = React.createClass({
     }
     const dx = event.pageX - this.mx0;
     const dy = event.pageY - this.my0;
+
     this.mx0 = event.pageX;
     this.my0 = event.pageY;
+
     const top =
       this.state.sortedPieceData[this.state.sortedPieceData.length - 1];
+
     this.moveGroup(top.group, dx, dy);
   },
 
-  handleMouseUp(event) {
+  handleMouseUp() {
     const checkNeighbor = (piece, drow, dcol) => {
-      const n = this.state.pieceDataArray[piece.row + drow][piece.col + dcol];
-      if (piece.group === n.group) { // neighbor is in same group as piece
+      const neighbor =
+        this.state.pieceDataArray[piece.row + drow][piece.col + dcol];
+
+      if (piece.group === neighbor.group) { // neighbor is in same group?
         return null;
       }
-      if (piece.rot !== n.rot) { // different orientations?
+      if (piece.rot !== neighbor.rot) { // different orientations?
         return null;
       }
       let x = piece.x;
       let y = piece.y;
+
       switch (piece.rot) {
         case 0:
           x += dcol * pieceContentSize;
@@ -337,32 +343,50 @@ const Puzzle = React.createClass({
           y -= dcol * pieceContentSize;
           break;
       }
-      const dx = n.x - x;
-      const dy = n.y - y;
+      const dx = neighbor.x - x;
+      const dy = neighbor.y - y;
+
       if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
         this.moveGroup(piece.group, dx, dy);
-        return n;
+
+        return neighbor;
       }
+
       return null;
     };
+
     const checkNeighbors = (piece) => {
       const { row, col } = piece;
+
       if (row > 0) {
-        const p = checkNeighbor(piece, -1, 0);
-        if (p) return p;
+        const neighbor = checkNeighbor(piece, -1, 0);
+
+        if (neighbor) {
+          return neighbor;
+        }
       }
       if (row < nRows - 1) {
-        const p = checkNeighbor(piece, 1, 0);
-        if (p) return p;
+        const neighbor = checkNeighbor(piece, 1, 0);
+
+        if (neighbor) {
+          return neighbor;
+        }
       }
       if (col > 0) {
-        const p = checkNeighbor(piece, 0, -1);
-        if (p) return p;
+        const neighbor = checkNeighbor(piece, 0, -1);
+
+        if (neighbor) {
+          return neighbor;
+        }
       }
       if (col < nCols - 1) {
-        const p = checkNeighbor(piece, 0, 1);
-        if (p) return p;
+        const neighbor = checkNeighbor(piece, 0, 1);
+
+        if (neighbor) {
+          return neighbor;
+        }
       }
+
       return null;
     };
 
@@ -371,17 +395,20 @@ const Puzzle = React.createClass({
     // See if any piece in clickedPiece's group is adjacent to a piece
     // in another group; if so, combine groups.
     const group = this.clickedPiece.group;
-    for (let i=0; i<group.length; ++i) {
+
+    for (let i = 0; i < group.length; ++i) {
       const piece = group[i];
       const neighbor = checkNeighbors(piece);
+
       if (neighbor) {
         // Combine piece's group and neighbor's group
-        neighbor.group.forEach((p) => {
-          piece.group.push(p);
-          p.group = piece.group;
+        neighbor.group.forEach((np) => {
+          piece.group.push(np);
+          np.group = piece.group;
         });
         // and bring combined group to top
         this.bringGroupToTop(piece.group);
+
         return;
       }
     }
