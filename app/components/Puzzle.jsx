@@ -77,8 +77,8 @@ const Piece = React.createClass({
 
 });
 
-const nRows = 4;
-const nCols = 4;
+const nRows = 3;
+const nCols = 3;
 const pieceContentSize = 150;
 const maxWaveDepth = 10;
 const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
@@ -203,7 +203,7 @@ var Puzzle = React.createClass({
   },
 
   componentDidMount() {
-    this.state.img.src = 'http://placekitten.com/800/800';
+    this.state.img.src = '/images/3x3.png';
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
       const scaleFactor = Math.min(
