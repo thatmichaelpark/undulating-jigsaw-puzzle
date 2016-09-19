@@ -6,12 +6,12 @@ import ReactDOM from 'react-dom';
 const Piece = React.createClass({
 
   componentDidMount() {
-    var ctx = ReactDOM.findDOMNode(this).getContext('2d');
+    const ctx = ReactDOM.findDOMNode(this).getContext('2d');
     this.paint(ctx);
   },
 
   componentDidUpdate() {
-    var ctx = ReactDOM.findDOMNode(this).getContext('2d');
+    const ctx = ReactDOM.findDOMNode(this).getContext('2d');
     ctx.clearRect(0, 0, 200, 200);
     this.paint(ctx);
   },
@@ -177,9 +177,6 @@ var Puzzle = React.createClass({
       pieceDataArray.push(pieceDataRow);
     }
 
-    pieceDataArray[0][0].group = pieceDataArray[0][1].group;
-    pieceDataArray[0][0].group.push(pieceDataArray[0][0]);
-
     const waveHorizontalData = createWaveData(nRows);
     const waveVerticalData = createWaveData(nCols);
     const time = 0;
@@ -229,9 +226,32 @@ var Puzzle = React.createClass({
     requestAnimationFrame(this.tick);
   },
 
+  moveGroup(group, dx, dy) {
+    const s = this.state.sortedPieceData.slice(); // copy
+    group.forEach((p) => {
+      p.x += dx;
+      p.y += dy;
+    })
+    this.setState({ sortedPieceData: s });
+  },
+
+  bringGroupToTop(group) {
+    let s = this.state.sortedPieceData.slice(); // copy
+
+    group.forEach((p) => {
+      const j = s.indexOf(p);
+      const left = (s.slice(0, j))
+      const right = (s.slice(j))
+      right.push(right.shift())
+      s = left.concat(right);
+    });
+    this.setState({ sortedPieceData: s });
+  },
+
   isDragging: false,
   mx0: 0,
   my0: 0,
+  clickedPiece: null,
 
   handleMouseDown(event) {
     const { sortedPieceData } = this.state;
@@ -240,18 +260,11 @@ var Puzzle = React.createClass({
       const piece = sortedPieceData[i];
       if (hitTest(event.pageX, event.pageY, piece)) {
         // bring hit piece's group to top
-        let s = sortedPieceData.slice(); // copy
-        piece.group.forEach((p) => {
-          const j = s.indexOf(p);
-          const left = (s.slice(0, j))
-          const right = (s.slice(j))
-          right.push(right.shift())
-          s = left.concat(right);
-        });
+        this.clickedPiece = piece;
+        this.bringGroupToTop(this.clickedPiece.group);
         this.mx0 = event.pageX;
         this.my0 = event.pageY;
         this.isDragging = true;
-        this.setState({ sortedPieceData: s });
         break;
       }
     }
@@ -265,17 +278,66 @@ var Puzzle = React.createClass({
     const dy = event.pageY - this.my0;
     this.mx0 = event.pageX;
     this.my0 = event.pageY;
-    const s = this.state.sortedPieceData.slice(); // copy
-    const top = s[s.length - 1];
-    top.group.forEach((p) => {
-      p.x += dx;
-      p.y += dy;
-    })
-    this.setState({ sortedPieceData: s });
+    const top = this.state.sortedPieceData[this.state.sortedPieceData.length - 1];
+    this.moveGroup(top.group, dx, dy);
   },
 
   handleMouseUp(event) {
+    const checkNeighbor = (piece, drow, dcol) => {
+      const n = this.state.pieceDataArray[piece.row + drow][piece.col + dcol];
+      if (piece.group === n.group) { // neighbor is in same group as piece
+        return null;
+      }
+      const x = piece.x + dcol * pieceContentSize;
+      const y = piece.y + drow * pieceContentSize;
+      const dx = n.x - x;
+      const dy = n.y - y;
+      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+        this.moveGroup(piece.group, dx, dy);
+        return n;
+      }
+      return null;
+    };
+    const checkNeighbors = (piece) => {
+      const { row, col } = piece;
+      if (row > 0) {
+        const p = checkNeighbor(piece, -1, 0);
+        if (p) return p;
+      }
+      if (row < nRows - 1) {
+        const p = checkNeighbor(piece, 1, 0);
+        if (p) return p;
+      }
+      if (col > 0) {
+        const p = checkNeighbor(piece, 0, -1);
+        if (p) return p;
+      }
+      if (col < nCols - 1) {
+        const p = checkNeighbor(piece, 0, 1);
+        if (p) return p;
+      }
+      return null;
+    };
+
     this.isDragging = false;
+
+    // See if any piece in clickedPiece's group is adjacent to a piece
+    // in another group; if so, combine groups.
+    const group = this.clickedPiece.group;
+    for (let i=0; i<group.length; ++i) {
+      const piece = group[i];
+      const neighbor = checkNeighbors(piece);
+      if (neighbor) {
+        // combine piece's group and neighbor's group
+        neighbor.group.forEach((p) => {
+          piece.group.push(p);
+          p.group = piece.group;
+        });
+        // and bring combined group to top
+        this.bringGroupToTop(piece.group);
+        return;
+      }
+    }
   },
 
   render() {
