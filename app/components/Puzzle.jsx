@@ -406,6 +406,7 @@ const Puzzle = React.createClass({
           piece.group.push(np);
           np.group = piece.group;
         });
+
         // and bring combined group to top
         this.bringGroupToTop(piece.group);
 
@@ -425,32 +426,33 @@ const Puzzle = React.createClass({
       bottom: 0,
       position: 'absolute',
       backgroundColor: 'yellow'
-    }
+    };
+
     return (
       <div
-        style={style}
+        onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
+        onMouseLeave={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}
         onMouseUp={this.handleMouseUp}
-        onMouseLeave={this.handleMouseUp}
-        onContextMenu={this.handleContextMenu}
+        style={style}
       >
         {this.state.imgLoaded ? (
           this.state.sortedPieceData.map((piece, index) => {
             return (
               <Piece
-                key={index}
-                row={piece.row}
                 col={piece.col}
-                x={piece.x}
-                y={piece.y}
-                rot={piece.rot}
+                horizontalWaves={this.state.horizontalWaves}
                 img={this.state.img}
+                key={index}
+                rot={piece.rot}
+                row={piece.row}
                 scaleFactor={this.state.scaleFactor}
                 tileSize={this.state.tileSize}
                 time={this.state.time}
                 verticalWaves={this.state.verticalWaves}
-                horizontalWaves={this.state.horizontalWaves}
+                x={piece.x}
+                y={piece.y}
               />
             );
           }))
