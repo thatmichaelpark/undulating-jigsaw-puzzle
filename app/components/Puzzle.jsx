@@ -1,24 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+const nRows = 3;
+const nCols = 3;
+const pieceContentSize = 150;
+const maxWaveDepth = 10;
+const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
+const nWaves = 3;
+
 // https://gist.github.com/sebmarkbage/6f7da234174ab9f64cce
 
 const Piece = React.createClass({
 
   componentDidMount() {
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
+
     this.paint(ctx);
   },
 
   componentDidUpdate() {
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
+
     ctx.clearRect(0, 0, 200, 200);
     this.paint(ctx);
   },
 
   paint(ctx) {
-    const {row, col, x, y, time, verticalWaves, horizontalWaves} = this.props;
-    const {scaleFactor, tileSize} = this.props;
+    const {
+      row, col, verticalWaves, horizontalWaves, scaleFactor, tileSize
+    } = this.props;
 
     // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     ctx.save();
@@ -26,17 +36,19 @@ const Piece = React.createClass({
 
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    for (let u=0; u<pieceContentSize; ++u){
-      ctx.lineTo(verticalWaves[col][row * pieceContentSize + u], u);
+    for (let i = 0; i < pieceContentSize; ++i) {
+      ctx.lineTo(verticalWaves[col][row * pieceContentSize + i], i);
     }
-    for (let u=0; u<pieceContentSize; ++u) {
-      ctx.lineTo(u, pieceContentSize + horizontalWaves[row + 1][col * pieceContentSize + u]);
+    for (let i = 0; i < pieceContentSize; ++i) {
+      ctx.lineTo(i, pieceContentSize +
+        horizontalWaves[row + 1][col * pieceContentSize + i]);
     }
-    for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(pieceContentSize + verticalWaves[col + 1][row * pieceContentSize + u], u);
+    for (let i = pieceContentSize; (i -= 1) >= 0;) {
+      ctx.lineTo(pieceContentSize +
+        verticalWaves[col + 1][row * pieceContentSize + i], i);
     }
-    for (let u=pieceContentSize; --u >= 0;) {
-      ctx.lineTo(u, horizontalWaves[row][col * pieceContentSize + u]);
+    for (let i = pieceContentSize; (i -= 1) >= 0;) {
+      ctx.lineTo(i, horizontalWaves[row][col * pieceContentSize + i]);
     }
     ctx.closePath();
     ctx.stroke();
@@ -46,10 +58,10 @@ const Piece = React.createClass({
     const x0 = (maxWaveDepth + col * pieceContentSize) * scaleFactor;
     const y0 = (maxWaveDepth + row * pieceContentSize) * scaleFactor;
     const size = tileSize * pieceActualSize / pieceContentSize;
-    const d = (size - tileSize) / 2;
+    const offset = (size - tileSize) / 2;
 
     ctx.drawImage(this.props.img,
-      x0 - d, y0 - d,
+      x0 - offset, y0 - offset,
       size, size,
       0, 0,
       pieceActualSize, pieceActualSize
@@ -58,31 +70,23 @@ const Piece = React.createClass({
   },
 
   render() {
-    const {x, y, rot} = this.props;
+    const { x, y, rot } = this.props;
     const style = {
       position: 'absolute',
       left: x - pieceActualSize / 2,
       top: y - pieceActualSize / 2,
       transform: `rotate(${rot}deg)`
-      // outline: '1px solid green'
-    }
+    };
+
     return (
       <canvas
+        height={pieceActualSize}
         style={style}
         width={pieceActualSize}
-        height={pieceActualSize}
       />
     );
   }
-
 });
-
-const nRows = 3;
-const nCols = 3;
-const pieceContentSize = 150;
-const maxWaveDepth = 10;
-const pieceActualSize = maxWaveDepth * 2 + pieceContentSize;
-const nWaves = 3;
 
 const hitTest = function(mx, my, piece) {
 // mx, my: mouse coordinates
@@ -92,77 +96,86 @@ const hitTest = function(mx, my, piece) {
   const { x, y, rot } = piece;
   const dx = mx - x;
   const dy = my - y;
-  let u = pieceContentSize / 2;
-  let v = pieceContentSize / 2;
+  let cx = pieceContentSize / 2;
+  let cy = pieceContentSize / 2;
 
-  switch(rot) {
+  switch (rot) {
     case 0:
-      u += dx;
-      v += dy;
+      cx += dx;
+      cy += dy;
       break;
     case 90:
-      u += dy;
-      v -= dx;
+      cx += dy;
+      cy -= dx;
       break;
     case 180:
-      u -= dx;
-      v -= dy;
+      cx -= dx;
+      cy -= dy;
       break;
     default: // 270
-      u -= dy;
-      v += dx;
+      cx -= dy;
+      cy += dx;
       break;
   }
-  const l = 0; // left
-  const r = pieceContentSize; // right
-  const t = 0; // top
-  const b = pieceContentSize; // bottom
-  return l < u && u < r && t < v && v < b;
+  const left = 0;
+  const right = pieceContentSize;
+  const top = 0;
+  const bottom = pieceContentSize;
+
+  return left < cx && cx < right && top < cy && cy < bottom;
 };
 
-
-const createWaveData = (n) => {
+const createWaveData = (nWaveData) => {
   const waveData = [];
-  for (let i = 0; i <= n; ++i ) {
+
+  for (let i = 0; i <= nWaveData; ++i) {
     const waveDatum = [];
     let maxDepth = 0;
-    for (let k=0; k<nWaves; ++k) {
+
+    for (let k = 0; k < nWaves; ++k) {
       const a = (Math.random() - 0.5);
-      const f = Math.random() * 5;
+      const freq = Math.random() * 5;
       const v = (Math.random() - 0.5) * 10;
+
       maxDepth += Math.abs(a);
-      waveDatum.push({ a, f, v });
+      waveDatum.push({ a, freq, v });
     }
-    for (let k=0; k<nWaves; ++k) {
+    for (let k = 0; k < nWaves; ++k) {
       waveDatum[k].a *= maxWaveDepth / maxDepth;
     }
     waveData.push(waveDatum);
   }
+
   return waveData;
 };
 
+// eslint-disable-next-line max-params
 const generateWaves = (waveData, pieceSize, nPieces, time) => {
   const result = [];
+
   for (let i = 0; i < pieceSize * nPieces; ++i) {
-    const t = i * Math.PI * 2 / pieceSize;
+    const theta = i * Math.PI * 2 / pieceSize;
     let sum = 0;
+
     for (let k = 0; k < waveData.length; ++k) {
-      sum += waveData[k].a * Math.sin(waveData[k].f * t + waveData[k].v * time);
+      sum += waveData[k].a * Math.sin(waveData[k].freq * theta +
+        waveData[k].v * time);
     }
-    result.push(sum * Math.sin(t / 2));
+    result.push(sum * Math.sin(theta / 2));
   }
+
   return result;
 };
 
-var Puzzle = React.createClass({
-
+const Puzzle = React.createClass({
   getInitialState() {
     const pieceDataArray = [];
     const sortedPieceData = [];
 
-    for (let row=0; row<nRows; ++row) {
+    for (let row = 0; row < nRows; ++row) {
       const pieceDataRow = [];
-      for (let col=0; col<nCols; ++col) {
+
+      for (let col = 0; col < nCols; ++col) {
         const pieceData = {
           row,
           col,
@@ -170,6 +183,7 @@ var Puzzle = React.createClass({
           y: 170 + row * (pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
         };
+
         pieceData.group = [pieceData];
         pieceDataRow.push(pieceData);
         sortedPieceData.push(pieceData);
@@ -186,6 +200,7 @@ var Puzzle = React.createClass({
     const horizontalWaves = waveHorizontalData.map((waveData) => {
       return generateWaves(waveData, pieceContentSize, nRows, time);
     });
+
     return {
       img: document.createElement('img'),
       imgLoaded: false,
@@ -222,30 +237,33 @@ var Puzzle = React.createClass({
     const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
       return generateWaves(waveData, pieceContentSize, nRows, time);
     });
+
     this.setState({ time, verticalWaves, horizontalWaves });
     requestAnimationFrame(this.tick);
   },
 
   moveGroup(group, dx, dy) {
-    const s = this.state.sortedPieceData.slice(); // copy
-    group.forEach((p) => {
-      p.x += dx;
-      p.y += dy;
-    })
-    this.setState({ sortedPieceData: s });
+    const spd = this.state.sortedPieceData.slice(); // copy
+
+    group.forEach((piece) => {
+      piece.x += dx;
+      piece.y += dy;
+    });
+    this.setState({ sortedPieceData: spd });
   },
 
   bringGroupToTop(group) {
-    let s = this.state.sortedPieceData.slice(); // copy
+    let spd = this.state.sortedPieceData.slice(); // copy
 
-    group.forEach((p) => {
-      const j = s.indexOf(p);
-      const left = (s.slice(0, j))
-      const right = (s.slice(j))
-      right.push(right.shift())
-      s = left.concat(right);
+    group.forEach((piece) => {
+      const j = spd.indexOf(piece);
+      const left = (spd.slice(0, j));
+      const right = (spd.slice(j));
+
+      right.push(right.shift());
+      spd = left.concat(right);
     });
-    this.setState({ sortedPieceData: s });
+    this.setState({ sortedPieceData: spd });
   },
 
   isDragging: false,
@@ -256,15 +274,22 @@ var Puzzle = React.createClass({
   handleMouseDown(event) {
     const { sortedPieceData } = this.state;
 
-    for (let i=sortedPieceData.length; --i >= 0;) {
+    for (let i = sortedPieceData.length; (i -= 1) >= 0;) {
       const piece = sortedPieceData[i];
+
       if (hitTest(event.pageX, event.pageY, piece)) {
         // bring hit piece's group to top
         this.clickedPiece = piece;
         this.bringGroupToTop(this.clickedPiece.group);
         this.mx0 = event.pageX;
         this.my0 = event.pageY;
-        this.isDragging = true;
+        if (event.buttons === 1) {
+          this.isDragging = true;
+        }
+        else if (event.buttons === 2) {
+          this.clickedPiece.rot = (this.clickedPiece.rot + 90) % 360;
+          // this.setState({ sortedPieceData: sortedPieceData });
+        }
         break;
       }
     }
@@ -278,7 +303,8 @@ var Puzzle = React.createClass({
     const dy = event.pageY - this.my0;
     this.mx0 = event.pageX;
     this.my0 = event.pageY;
-    const top = this.state.sortedPieceData[this.state.sortedPieceData.length - 1];
+    const top =
+      this.state.sortedPieceData[this.state.sortedPieceData.length - 1];
     this.moveGroup(top.group, dx, dy);
   },
 
@@ -288,8 +314,29 @@ var Puzzle = React.createClass({
       if (piece.group === n.group) { // neighbor is in same group as piece
         return null;
       }
-      const x = piece.x + dcol * pieceContentSize;
-      const y = piece.y + drow * pieceContentSize;
+      if (piece.rot !== n.rot) { // different orientations?
+        return null;
+      }
+      let x = piece.x;
+      let y = piece.y;
+      switch (piece.rot) {
+        case 0:
+          x += dcol * pieceContentSize;
+          y += drow * pieceContentSize;
+          break;
+        case 90:
+          x -= drow * pieceContentSize;
+          y += dcol * pieceContentSize;
+          break;
+        case 180:
+          x -= dcol * pieceContentSize;
+          y -= drow * pieceContentSize;
+          break;
+        default: // 270
+          x += drow * pieceContentSize;
+          y -= dcol * pieceContentSize;
+          break;
+      }
       const dx = n.x - x;
       const dy = n.y - y;
       if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
@@ -328,7 +375,7 @@ var Puzzle = React.createClass({
       const piece = group[i];
       const neighbor = checkNeighbors(piece);
       if (neighbor) {
-        // combine piece's group and neighbor's group
+        // Combine piece's group and neighbor's group
         neighbor.group.forEach((p) => {
           piece.group.push(p);
           p.group = piece.group;
@@ -338,6 +385,10 @@ var Puzzle = React.createClass({
         return;
       }
     }
+  },
+
+  handleContextMenu(event) {
+    event.preventDefault();
   },
 
   render() {
@@ -355,6 +406,7 @@ var Puzzle = React.createClass({
         onMouseMove={this.handleMouseMove}
         onMouseUp={this.handleMouseUp}
         onMouseLeave={this.handleMouseUp}
+        onContextMenu={this.handleContextMenu}
       >
         {this.state.imgLoaded ? (
           this.state.sortedPieceData.map((piece, index) => {

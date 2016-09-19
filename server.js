@@ -34,9 +34,11 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-// const posts = require('./routes/posts');
-//
-// app.use('/api', posts);
+const users = require('./routes/users');
+const token = require('./routes/token');
+
+app.use('/api', users);
+app.use('/api', token);
 
 app.use((_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
