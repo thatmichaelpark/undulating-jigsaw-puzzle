@@ -157,19 +157,29 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 var Puzzle = React.createClass({
 
   getInitialState() {
-    const pieceData = [];
+    const pieceDataArray = [];
+    const sortedPieceData = [];
+
     for (let row=0; row<nRows; ++row) {
+      const pieceDataRow = [];
       for (let col=0; col<nCols; ++col) {
-        pieceData.push({
+        const pieceData = {
           row,
           col,
           x: 100 + col * (pieceContentSize - 30),
           y: 170 + row * (pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
-        });
+        };
+        pieceData.group = [pieceData];
+        pieceDataRow.push(pieceData);
+        sortedPieceData.push(pieceData);
       }
+      pieceDataArray.push(pieceDataRow);
     }
-    const sortedPieceData = pieceData.slice(); // copy
+
+    pieceDataArray[0][0].group = pieceDataArray[0][1].group;
+    pieceDataArray[0][0].group.push(pieceDataArray[0][0]);
+
     const waveHorizontalData = createWaveData(nRows);
     const waveVerticalData = createWaveData(nCols);
     const time = 0;
@@ -184,7 +194,7 @@ var Puzzle = React.createClass({
       imgLoaded: false,
       waveHorizontalData,
       waveVerticalData,
-      pieceData,
+      pieceDataArray,
       sortedPieceData,
       time: 0,
       verticalWaves,
@@ -229,15 +239,19 @@ var Puzzle = React.createClass({
     for (let i=sortedPieceData.length; --i >= 0;) {
       const piece = sortedPieceData[i];
       if (hitTest(event.pageX, event.pageY, piece)) {
-        // bring hit piece to top
-        const s = sortedPieceData.slice(); // copy
-        const left = (s.slice(0, i))
-      	const right = (s.slice(i))
-      	right.push(right.shift())
+        // bring hit piece's group to top
+        let s = sortedPieceData.slice(); // copy
+        piece.group.forEach((p) => {
+          const j = s.indexOf(p);
+          const left = (s.slice(0, j))
+          const right = (s.slice(j))
+          right.push(right.shift())
+          s = left.concat(right);
+        });
         this.mx0 = event.pageX;
         this.my0 = event.pageY;
         this.isDragging = true;
-        this.setState({ sortedPieceData: left.concat(right) });
+        this.setState({ sortedPieceData: s });
         break;
       }
     }
@@ -253,8 +267,10 @@ var Puzzle = React.createClass({
     this.my0 = event.pageY;
     const s = this.state.sortedPieceData.slice(); // copy
     const top = s[s.length - 1];
-    top.x += dx;
-    top.y += dy;
+    top.group.forEach((p) => {
+      p.x += dx;
+      p.y += dy;
+    })
     this.setState({ sortedPieceData: s });
   },
 
