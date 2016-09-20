@@ -1,4 +1,5 @@
 import AppBar from 'material-ui/AppBar';
+import axios from 'axios';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Login from 'components/Login'
@@ -34,8 +35,15 @@ const Nav = React.createClass({
   handleLoginCancel() {
     this.setState({ loginIsOpen: false });
   },
-  handleSignupOk() {
-    this.setState({ loggedIn: true, signupIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+  handleSignupOk(username, password) {
+    axios.post('/api/users', { username, password })
+      .then((result) => {
+        console.log('result', result.data);
+        this.setState({ loggedIn: true, signupIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+      })
+      .catch((err) => {
+        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+      });
   },
   handleSignupCancel() {
     this.setState({ signupIsOpen: false });

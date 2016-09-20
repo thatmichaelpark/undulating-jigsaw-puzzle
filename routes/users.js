@@ -30,17 +30,18 @@ router.post('/users', (req, res, next) => {
   knex('users').where('username', username)
     .then((users) => {
       if (users.length > 0) {
-        throw boom.create(400, 'username already exists');
+        throw boom.create(400, 'Username already exists');
       }
 
       return bcrypt.hash(password, 12);
     })
     .then((hashedPassword) => {
       return knex('users')
-        .insert(decamelizeKeys({ username, hashedPassword }));
+        .insert(decamelizeKeys({ username, hashedPassword }), '*');
     })
-    .then(() => {
-      res.sendStatus(200);
+    .then((users) => {
+      const { username, id } = users[0];
+      res.send({ username, id });
     })
     .catch((err) => {
       next(err);

@@ -192,6 +192,8 @@ const Puzzle = React.createClass({
 
   handleMouseDown(event) {
     const { sortedPieceData } = this.state;
+    console.log(event.pageX, event.pageY);
+    console.log(event.nativeEvent.offsetX, event.nativeEvent.offsetY);
 
     for (let i = sortedPieceData.length; (i -= 1) >= 0;) {
       const piece = sortedPieceData[i];

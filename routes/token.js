@@ -31,18 +31,18 @@ router.post('/token', (req, res, next) => {
         expiresIn: '3h'
       });
 
-      res.cookie('beets_accessToken', token, {
+      res.cookie('NQJ_accessToken', token, {
         httpOnly: true,
         expire: expiry,
         secure: router.get('env') === 'production'
       });
 
-      res.cookie('beets_loggedIn', true, {
+      res.cookie('NQJ_loggedIn', true, {
         expires: expiry,
         secure: router.get('env') === 'production'
       });
 
-      res.cookie('beets_username', user.username, {
+      res.cookie('NQJ_username', user.username, {
         expires: expiry,
         secure: router.get('env') === 'production'
       });
@@ -58,9 +58,9 @@ router.post('/token', (req, res, next) => {
 });
 
 router.delete('/token', (req, res) => {
-  res.clearCookie('beets_accessToken');
-  res.clearCookie('beets_loggedIn');
-  res.clearCookie('beets_username');
+  res.clearCookie('NQJ_accessToken');
+  res.clearCookie('NQJ_loggedIn');
+  res.clearCookie('NQJ_username');
 
   res.sendStatus(200);
 });
