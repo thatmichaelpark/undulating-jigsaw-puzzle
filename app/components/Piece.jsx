@@ -17,7 +17,7 @@ const Piece = React.createClass({
   componentDidUpdate() {
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
 
-    ctx.clearRect(0, 0, 200, 200);
+    ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     this.paint(ctx);
   },
 
@@ -26,7 +26,6 @@ const Piece = React.createClass({
       row, col, verticalWaves, horizontalWaves, scaleFactor, tileSize
     } = this.props;
 
-    // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     ctx.save();
     ctx.translate(maxWaveDepth, maxWaveDepth);
 
