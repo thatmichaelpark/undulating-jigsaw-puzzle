@@ -206,7 +206,20 @@ const Puzzle = React.createClass({
           this.isDragging = true;
         }
         else if (event.buttons === 2) {
-          this.clickedPiece.rot = (this.clickedPiece.rot + (event.shiftKey ? 270 : 90)) % 360;
+          const rotate = (piece, origin, ccw) => {
+            const dx = piece.x - origin.x;
+            const dy = piece.y - origin.y;
+            return ccw ?
+              { x: origin.x + dy, y: origin.y - dx} :
+              { x: origin.x - dy, y: origin.y + dx};
+          }
+          const ccw = event.shiftKey;
+          this.clickedPiece.group.forEach((piece) => {
+            piece.rot = (piece.rot + (ccw ? 270 : 90)) % 360;
+            const { x, y } = rotate(piece, this.clickedPiece, ccw);
+            piece.x = x;
+            piece.y = y;
+          });
         }
         break;
       }
