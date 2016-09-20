@@ -1,4 +1,4 @@
-import App from './components/App';
+import App from 'components/App';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React from 'react';
 import ReactDOM from 'react-dom';

@@ -1,102 +1,87 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  pieceContentSize, maxWaveDepth, pieceActualSize, nWaves
+} from '../constants';
 
 // https://gist.github.com/sebmarkbage/6f7da234174ab9f64cce
 
+const Piece = React.createClass({
 
-const img = document.createElement('img');
+  componentDidMount() {
+    const ctx = ReactDOM.findDOMNode(this).getContext('2d');
 
-var Graphic = React.createClass({
-  getInitialState() {
-    return {
-      x: 100,
-      y: 100,
-    };
-  },
-  componentDidMount: function() {
-    var context = ReactDOM.findDOMNode(this).getContext('2d');
-    this.paint(context);
-    img.src = 'http://placekitten.com/800/800';
-    console.log('loading');
-    img.addEventListener('load', () => {
-      this.paint(context);
-      console.log('loaded');
-    });
+    this.paint(ctx);
   },
 
-  componentDidUpdate: function() {
-    var context = ReactDOM.findDOMNode(this).getContext('2d');
-    context.clearRect(0, 0, 200, 200);
-    this.paint(context);
+  componentDidUpdate() {
+    const ctx = ReactDOM.findDOMNode(this).getContext('2d');
+
+    ctx.clearRect(0, 0, 200, 200);
+    this.paint(ctx);
   },
 
-  paint: function(ctx) {
-    console.log('painted');
-    // Save the state, so we can undo the clipping
+  paint(ctx) {
+    const {
+      row, col, verticalWaves, horizontalWaves, scaleFactor, tileSize
+    } = this.props;
+
+    // ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     ctx.save();
+    ctx.translate(maxWaveDepth, maxWaveDepth);
 
-    // Create a circle
     ctx.beginPath();
-    // ctx.arc(106, 77, 74, 0, Math.PI * 2, false);
     ctx.moveTo(0, 0);
-    ctx.translate(100, 100);
-    ctx.lineTo(0, 0);
-    ctx.lineTo(0, 250);
+    for (let i = 0; i < pieceContentSize; ++i) {
+      ctx.lineTo(verticalWaves[col][row * pieceContentSize + i], i);
+    }
+    for (let i = 0; i < pieceContentSize; ++i) {
+      ctx.lineTo(i, pieceContentSize +
+        horizontalWaves[row + 1][col * pieceContentSize + i]);
+    }
+    for (let i = pieceContentSize; (i -= 1) >= 0;) {
+      ctx.lineTo(pieceContentSize +
+        verticalWaves[col + 1][row * pieceContentSize + i], i);
+    }
+    for (let i = pieceContentSize; (i -= 1) >= 0;) {
+      ctx.lineTo(i, horizontalWaves[row][col * pieceContentSize + i]);
+    }
     ctx.closePath();
-
-    ctx.restore();
-    // Clip to the current path
+    ctx.stroke();
     ctx.clip();
+    ctx.translate(-maxWaveDepth, -maxWaveDepth);
 
-    ctx.drawImage(img, 0, 0);
+    const x0 = (maxWaveDepth + col * pieceContentSize) * scaleFactor;
+    const y0 = (maxWaveDepth + row * pieceContentSize) * scaleFactor;
+    const size = tileSize * pieceActualSize / pieceContentSize;
+    const offset = (size - tileSize) / 2;
 
-    // Undo the clipping
+    ctx.drawImage(this.props.img,
+      x0 - offset, y0 - offset,
+      size, size,
+      0, 0,
+      pieceActualSize, pieceActualSize
+    );
+    ctx.restore();
   },
 
-  handleMouseDown(event) {
-    console.log(event.screenX, event.screenY);
-    console.log(event.pageX, event.pageY);
-    console.log(event.clientX, event.clientY);
-    this.setState({
-      x: event.pageX - 50,
-      y: event.pageY - 50
-    })
-  },
-  render: function() {
+  render() {
+    const { x, y, rot } = this.props;
     const style = {
       position: 'absolute',
-      left: this.state.x,
-      top: this.state.y,
-    }
-    return <canvas style={style} onMouseDown={this.handleMouseDown} width={200} height={200} />;
-  }
+      left: x - pieceActualSize / 2,
+      top: y - pieceActualSize / 2,
+      transform: `rotate(${rot}deg)`
+    };
 
-});
-
-var Puzzle = React.createClass({
-
-  getInitialState: function() {
-    return { rotation: 0 };
-  },
-
-  componentDidMount: function() {
-    // requestAnimationFrame(this.tick);
-  },
-
-  tick: function() {
-    this.setState({ rotation: this.state.rotation + .01 });
-    requestAnimationFrame(this.tick);
-  },
-
-  render: function() {
     return (
-      <div>
-        <Graphic rotation={this.state.rotation} />
-        <img src="http://placekitten.com/700/700"/>
-      </div>
+      <canvas
+        height={pieceActualSize}
+        style={style}
+        width={pieceActualSize}
+      />
     );
   }
-
 });
 
-export default Puzzle;
+export default Piece;
