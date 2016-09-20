@@ -4,8 +4,8 @@ import {
 import Piece from 'components/Piece';
 import React from 'react';
 
-const nRows = 3;
-const nCols = 3;
+const nRows = 6;
+const nCols = 6;
 
 const hitTest = function(mx, my, piece) {
 // mx, my: mouse coordinates
@@ -98,8 +98,8 @@ const Puzzle = React.createClass({
         const pieceData = {
           row,
           col,
-          x: 100 + col * (pieceContentSize - 30),
-          y: 170 + row * (pieceContentSize - 30),
+          x: pieceContentSize + col * (pieceContentSize - 30),
+          y: pieceContentSize + row * (pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
         };
 
@@ -321,29 +321,30 @@ const Puzzle = React.createClass({
       return null;
     };
 
-    this.isDragging = false;
+    if (this.isDragging) {
+      // See if any piece in clickedPiece's group is adjacent to a piece
+      // in another group; if so, combine groups.
+      const group = this.clickedPiece.group;
 
-    // See if any piece in clickedPiece's group is adjacent to a piece
-    // in another group; if so, combine groups.
-    const group = this.clickedPiece.group;
+      for (let i = 0; i < group.length; ++i) {
+        const piece = group[i];
+        const neighbor = checkNeighbors(piece);
 
-    for (let i = 0; i < group.length; ++i) {
-      const piece = group[i];
-      const neighbor = checkNeighbors(piece);
+        if (neighbor) {
+          // Combine piece's group and neighbor's group
+          neighbor.group.forEach((np) => {
+            piece.group.push(np);
+            np.group = piece.group;
+          });
 
-      if (neighbor) {
-        // Combine piece's group and neighbor's group
-        neighbor.group.forEach((np) => {
-          piece.group.push(np);
-          np.group = piece.group;
-        });
+          // and bring combined group to top
+          this.bringGroupToTop(piece.group);
 
-        // and bring combined group to top
-        this.bringGroupToTop(piece.group);
-
-        return;
+          break;
+        }
       }
     }
+    this.isDragging = false;
   },
 
   handleContextMenu(event) {
@@ -353,10 +354,11 @@ const Puzzle = React.createClass({
   render() {
     const style = {
       width: '100%',
-      top: 0,
+      top: '64px',
       bottom: 0,
       position: 'absolute',
-      backgroundColor: 'yellow'
+      backgroundColor: 'yellow',
+      overflow: 'auto'
     };
 
     return (
