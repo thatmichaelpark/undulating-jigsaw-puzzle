@@ -7,8 +7,20 @@ exports.seed = function(knex) {
     .then(() => {
       return knex('users').insert([{
         id: 1,
-        username: 'tmp',
-        hashed_password: '$2a$12$QyCNRnoLPEEXeUNDLp7Y8.egkVXOickIrioDZeFVlFks1PYRfYVhy'
+        username: 'test1',
+        hashed_password: '$2a$12$pEyTt6Fb22hQk75dOTrGIer7D5UtR8VoCsJCaNyO.u9CBFrIGzWbe'
+      }, {
+        id: 2,
+        username: 'test2',
+        hashed_password: '$2a$12$XlRjbeMG3ReiDgX/ntqWo.4tJil5JhXay72vV0ifwYpLWuu5PsAz6'
+      }, {
+        id: 3,
+        username: 'test3',
+        hashed_password: '$2a$12$.IXZkYf6AuRF82VD64M68ePRg6I0SqfOM686Y/duL8gL9Jo71xJQu'
+      }, {
+        id: 4,
+        username: 'test4',
+        hashed_password: '$2a$12$E.M6IpGk9L1ka.uv5ICQHO1G8LsSWMd3CmCKRltliegQA9eIDZTIG'
       }]);
     })
     .then(() => {
