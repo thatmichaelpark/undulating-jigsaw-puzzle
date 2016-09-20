@@ -206,7 +206,7 @@ const Puzzle = React.createClass({
           this.isDragging = true;
         }
         else if (event.buttons === 2) {
-          this.clickedPiece.rot = (this.clickedPiece.rot + 90) % 360;
+          this.clickedPiece.rot = (this.clickedPiece.rot + (event.shiftKey ? 270 : 90)) % 360;
         }
         break;
       }
