@@ -1,8 +1,8 @@
+import {
+  maxWaveDepth, pieceActualSize, pieceContentSize
+} from '../constants';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  pieceContentSize, maxWaveDepth, pieceActualSize, nWaves
-} from '../constants';
 
 // https://gist.github.com/sebmarkbage/6f7da234174ab9f64cce
 
