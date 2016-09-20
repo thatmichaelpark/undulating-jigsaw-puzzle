@@ -3,6 +3,7 @@ import {
 } from '../constants';
 import Piece from 'components/Piece';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 const nRows = 6;
 const nCols = 6;
@@ -190,20 +191,29 @@ const Puzzle = React.createClass({
   my0: 0,
   clickedPiece: null,
 
+  mouseCoords(event) {
+    const div = ReactDOM.findDOMNode(this);
+    const { left, top } = div.getBoundingClientRect();
+    const { scrollLeft, scrollTop } = div;
+    return {
+      mx: event.clientX - left + scrollLeft,
+      my: event.clientY - top + scrollTop
+    };
+  },
+
   handleMouseDown(event) {
     const { sortedPieceData } = this.state;
-    console.log(event.pageX, event.pageY);
-    console.log(event.nativeEvent.offsetX, event.nativeEvent.offsetY);
+    const { mx, my } = this.mouseCoords(event);
 
     for (let i = sortedPieceData.length; (i -= 1) >= 0;) {
       const piece = sortedPieceData[i];
 
-      if (hitTest(event.pageX, event.pageY, piece)) {
+      if (hitTest(mx, my, piece)) {
         // bring hit piece's group to top
         this.clickedPiece = piece;
         this.bringGroupToTop(this.clickedPiece.group);
-        this.mx0 = event.pageX;
-        this.my0 = event.pageY;
+        this.mx0 = mx;
+        this.my0 = my;
         if (event.buttons === 1) {
           this.isDragging = true;
         }
@@ -232,11 +242,12 @@ const Puzzle = React.createClass({
     if (!this.isDragging) {
       return;
     }
-    const dx = event.pageX - this.mx0;
-    const dy = event.pageY - this.my0;
+    const { mx, my } = this.mouseCoords(event);
+    const dx = mx - this.mx0;
+    const dy = my - this.my0;
 
-    this.mx0 = event.pageX;
-    this.my0 = event.pageY;
+    this.mx0 = mx;
+    this.my0 = my;
 
     const top =
       this.state.sortedPieceData[this.state.sortedPieceData.length - 1];
