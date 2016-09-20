@@ -7,8 +7,8 @@ import TextField from 'material-ui/TextField';
 const schema = Joi.object({
   username: Joi.string().trim().max(20),
   password: Joi.string().trim().max(50),
-  confirmPassword:
-  Joi.any().valid(Joi.ref('password')).options({ language: { any: { allowOnly: 'must match password' } } })
+  confirmPassword: Joi.any().valid(Joi.ref('password')).options(
+    { language: { any: { allowOnly: 'must match password' } } })
 });
 
 const Signup = React.createClass({
@@ -23,15 +23,23 @@ const Signup = React.createClass({
   handleBlur(event) {
     const { name, value } = event.target;
     const nextErrors = Object.assign({}, this.state.errors);
-    const result = Joi.validate({ [name]: value }, schema);
+    const inputs = { [name]: value };
+
+    // A little hack to get Joi.ref to work:
+    if (name === 'confirmPassword') {
+      inputs.password = this.state.password;
+    }
+
+    const result = Joi.validate(inputs, schema);
 
     if (result.error) {
       for (const detail of result.error.details) {
         nextErrors[detail.path] = detail.message;
       }
-      return this.setState({ errors: nextErrors });
     }
-    delete nextErrors[name];
+    else {
+      delete nextErrors[name];
+    }
     this.setState({ errors: nextErrors });
   },
   handleChange(event) {
