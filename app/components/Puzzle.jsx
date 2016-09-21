@@ -1,14 +1,14 @@
 const maxWaveDepth = 10;
 const nWaves = 3;
-const pieceContentSize = 150;
+const pieceContentSize = 50;
 const pieceActualSize = pieceContentSize + 2 * maxWaveDepth;
 
 import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const nRows = 6;
-const nCols = 6;
+const nRows = 3;
+const nCols = 4;
 
 const hitTest = function(mx, my, piece) {
 // mx, my: mouse coordinates
@@ -118,10 +118,10 @@ const Puzzle = React.createClass({
     const waveVerticalData = createWaveData(nCols);
     const time = 0;
     const verticalWaves = waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nCols, time);
+      return generateWaves(waveData, pieceContentSize, nRows, time);
     });
     const horizontalWaves = waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nRows, time);
+      return generateWaves(waveData, pieceContentSize, nCols, time);
     });
 
     return {
@@ -155,10 +155,10 @@ const Puzzle = React.createClass({
   tick(ms) {
     const time = ms * 0.001;
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nCols, time);
+      return generateWaves(waveData, pieceContentSize, nRows, time);
     });
     const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nRows, time);
+      return generateWaves(waveData, pieceContentSize, nCols, time);
     });
 
     this.setState({ time, verticalWaves, horizontalWaves });
