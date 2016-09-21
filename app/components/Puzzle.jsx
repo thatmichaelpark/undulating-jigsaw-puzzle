@@ -1,6 +1,7 @@
 import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 const hitTest = function(mx, my, piece, pieceContentSize) {
 // mx, my: mouse coordinates
@@ -92,66 +93,73 @@ const Puzzle = React.createClass({
   },
 
   componentDidMount() {
-    this.nRows = 4;
-    this.nCols = 5;
-    this.maxWaveDepth = 10;
-    this.nWaves = 3;
-    this.pieceContentSize = 150;
-    this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
+    axios.get(`/api/puzzles/${this.props.params.puzzleId}`)
+      .then((result) =>{
+        this.nRows = result.data.nRows;
+        this.nCols = result.data.nCols;
+        this.maxWaveDepth = result.data.maxWaveDepth;
+        this.nWaves = result.data.nWaves;
+        this.pieceContentSize = result.data.pieceContentSize;
+        this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
 
-    const pieceDataArray = [];
-    const sortedPieceData = [];
+        const pieceDataArray = [];
+        const sortedPieceData = [];
 
-    for (let row = 0; row < this.nRows; ++row) {
-      const pieceDataRow = [];
+        for (let row = 0; row < this.nRows; ++row) {
+          const pieceDataRow = [];
 
-      for (let col = 0; col < this.nCols; ++col) {
-        const pieceData = {
-          row,
-          col,
-          x: this.pieceContentSize + col * (this.pieceContentSize - 30),
-          y: this.pieceContentSize + row * (this.pieceContentSize - 30),
-          rot: 0  // 0, 90, 180, 270
-        };
+          for (let col = 0; col < this.nCols; ++col) {
+            const pieceData = {
+              row,
+              col,
+              x: this.pieceContentSize + col * (this.pieceContentSize - 30),
+              y: this.pieceContentSize + row * (this.pieceContentSize - 30),
+              rot: 0  // 0, 90, 180, 270
+            };
 
-        pieceData.group = [pieceData];
-        pieceDataRow.push(pieceData);
-        sortedPieceData.push(pieceData);
-      }
-      pieceDataArray.push(pieceDataRow);
-    }
+            pieceData.group = [pieceData];
+            pieceDataRow.push(pieceData);
+            sortedPieceData.push(pieceData);
+          }
+          pieceDataArray.push(pieceDataRow);
+        }
 
-    const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth);
-    const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth);
-    const time = 0;
-    const verticalWaves = waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
-    });
-    const horizontalWaves = waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
-    });
+        const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth);
+        const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth);
+        const time = 0;
+        const verticalWaves = waveVerticalData.map((waveData) => {
+          return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
+        });
+        const horizontalWaves = waveHorizontalData.map((waveData) => {
+          return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
+        });
 
-    this.setState({
-      waveHorizontalData,
-      waveVerticalData,
-      pieceDataArray,
-      sortedPieceData,
-      verticalWaves,
-      horizontalWaves
-    });
+        this.setState({
+          waveHorizontalData,
+          waveVerticalData,
+          pieceDataArray,
+          sortedPieceData,
+          verticalWaves,
+          horizontalWaves
+        });
 
-    this.state.img.src = '/images/clouds-06.jpg';
-    this.state.img.addEventListener('load', () => {
-      const { width, height } = this.state.img;
-      const scaleFactor = Math.min(
-        width / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nCols),
-        height / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nRows)
-      );
-      const tileSize = this.pieceContentSize * scaleFactor;
+        console.log(result.data);
+        this.state.img.src = result.data.imageUrl;
+        this.state.img.addEventListener('load', () => {
+          const { width, height } = this.state.img;
+          const scaleFactor = Math.min(
+            width / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nCols),
+            height / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nRows)
+          );
+          const tileSize = this.pieceContentSize * scaleFactor;
 
-      this.setState({ scaleFactor, tileSize, imgLoaded: true });
-      requestAnimationFrame(this.tick);
-    });
+          this.setState({ scaleFactor, tileSize, imgLoaded: true });
+          requestAnimationFrame(this.tick);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 
   tick(ms) {
