@@ -25,7 +25,7 @@ exports.seed = function(knex) {
         max_freq: 3,
         max_v: 1,
         n_waves: 2,
-        has_rotated_pieces: true,
+        has_rotated_pieces: false,
         image_url: '/images/cat800.jpg'
       }, {
         difficulty: 1,
@@ -39,7 +39,7 @@ exports.seed = function(knex) {
         has_rotated_pieces: true,
         image_url: '/images/fractal-026.jpg'
       }, {
-        difficulty: 1,
+        difficulty: 2,
         n_rows: 4,
         n_cols: 4,
         max_wave_depth: 20,
@@ -50,7 +50,7 @@ exports.seed = function(knex) {
         has_rotated_pieces: true,
         image_url: '/images/JellyBellyBeans.jpg'
       }, {
-        difficulty: 1,
+        difficulty: 2,
         n_rows: 4,
         n_cols: 4,
         max_wave_depth: 20,

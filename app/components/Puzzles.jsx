@@ -28,49 +28,50 @@ const Puzzles = React.createClass({
       });
   },
   render() {
+    const makeCards = (difficulty) =>
+      this.state.puzzles.filter((puzzle) => puzzle.difficulty === difficulty).map((puzzle, index) => {
+        return (
+          <Link key={index} to={`/puzzle/${puzzle.id}`}>
+            <Card
+              style={{width: '30rem', margin: '1rem'}}
+              zDepth={4}
+            >
+              <CardMedia
+                overlay={
+                  <CardTitle
+                    title={`${puzzle.nRows} x ${puzzle.nCols}`}
+                    subtitle={puzzle.hasRotatedPieces ? "With rotations" : null}
+                  />
+                }
+              >
+                <img src={puzzle.imageUrl} />
+              </CardMedia>
+            </Card>
+          </Link>
+        );
+      }
+    );
+
     return (
       <Tabs style={styles.tabs}>
         <Tab label='Easy' >
           <div className='tab-contents'>
-            {this.state.puzzles.filter((puzzle) => puzzle.difficulty === 1).map((puzzle, index) => {
-              return (
-                <Link key={index} to={`/puzzle/${puzzle.id}`}>
-                  <Card style={{width: '30rem', margin: '1rem'}}>
-                    <CardMedia
-                      overlay={
-                        <CardTitle
-                          title={`${puzzle.nRows} x ${puzzle.nCols}`}
-                          subtitle={puzzle.hasRotatedPieces ? "With rotations" : null}
-                        />
-                      }
-                    >
-                      <img src={puzzle.imageUrl} />
-                    </CardMedia>
-                  </Card>
-                </Link>
-              );
-            })}
+            {makeCards(1)}
           </div>
         </Tab>
         <Tab label='Moderate' >
-          <div>
-            <p>
-              This is another example tab.
-            </p>
+          <div className='tab-contents'>
+            {makeCards(2)}
           </div>
         </Tab>
         <Tab label='Difficult'>
-          <div>
-            <p>
-              This is a third example tab.
-            </p>
+          <div className='tab-contents'>
+            {makeCards(3)}
           </div>
         </Tab>
         <Tab label='OMG WTF'>
-          <div>
-            <p>
-              This is a third example tab.
-            </p>
+          <div className='tab-contents'>
+            {makeCards(4)}
           </div>
         </Tab>
       </Tabs>
