@@ -1,6 +1,8 @@
-import {
-  maxWaveDepth, nWaves, pieceContentSize
-} from '../constants';
+const maxWaveDepth = 10;
+const nWaves = 3;
+const pieceContentSize = 150;
+const pieceActualSize = pieceContentSize + 2 * maxWaveDepth;
+
 import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -89,6 +91,7 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 
 const Puzzle = React.createClass({
   getInitialState() {
+
     const pieceDataArray = [];
     const sortedPieceData = [];
 
@@ -391,6 +394,9 @@ const Puzzle = React.createClass({
                 horizontalWaves={this.state.horizontalWaves}
                 img={this.state.img}
                 key={index}
+                maxWaveDepth={maxWaveDepth}
+                pieceActualSize={pieceActualSize}
+                pieceContentSize={pieceContentSize}
                 rot={piece.rot}
                 row={piece.row}
                 scaleFactor={this.state.scaleFactor}

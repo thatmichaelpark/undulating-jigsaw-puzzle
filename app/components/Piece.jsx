@@ -1,6 +1,3 @@
-import {
-  maxWaveDepth, pieceActualSize, pieceContentSize
-} from '../constants';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -16,6 +13,7 @@ const Piece = React.createClass({
 
   componentDidUpdate() {
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
+    const { pieceActualSize } = this.props;
 
     ctx.clearRect(0, 0, pieceActualSize, pieceActualSize);
     this.paint(ctx);
@@ -23,7 +21,8 @@ const Piece = React.createClass({
 
   paint(ctx) {
     const {
-      row, col, verticalWaves, horizontalWaves, scaleFactor, tileSize
+      row, col, verticalWaves, horizontalWaves, scaleFactor, tileSize,
+      maxWaveDepth, pieceActualSize, pieceContentSize
     } = this.props;
 
     ctx.save();
@@ -65,7 +64,7 @@ const Piece = React.createClass({
   },
 
   render() {
-    const { x, y, rot } = this.props;
+    const { x, y, rot, pieceActualSize } = this.props;
     const style = {
       position: 'absolute',
       left: x - pieceActualSize / 2,
