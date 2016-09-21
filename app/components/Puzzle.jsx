@@ -7,9 +7,6 @@ import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const nRows = 3;
-const nCols = 4;
-
 const hitTest = function(mx, my, piece) {
 // mx, my: mouse coordinates
 // piece.x, piece.y: piece center coordinates
@@ -90,15 +87,19 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 };
 
 const Puzzle = React.createClass({
+
+  nRows: 4,
+  nCols: 5,
+
   getInitialState() {
 
     const pieceDataArray = [];
     const sortedPieceData = [];
 
-    for (let row = 0; row < nRows; ++row) {
+    for (let row = 0; row < this.nRows; ++row) {
       const pieceDataRow = [];
 
-      for (let col = 0; col < nCols; ++col) {
+      for (let col = 0; col < this.nCols; ++col) {
         const pieceData = {
           row,
           col,
@@ -114,14 +115,14 @@ const Puzzle = React.createClass({
       pieceDataArray.push(pieceDataRow);
     }
 
-    const waveHorizontalData = createWaveData(nRows);
-    const waveVerticalData = createWaveData(nCols);
+    const waveHorizontalData = createWaveData(this.nRows);
+    const waveVerticalData = createWaveData(this.nCols);
     const time = 0;
     const verticalWaves = waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nRows, time);
+      return generateWaves(waveData, pieceContentSize, this.nRows, time);
     });
     const horizontalWaves = waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nCols, time);
+      return generateWaves(waveData, pieceContentSize, this.nCols, time);
     });
 
     return {
@@ -142,8 +143,8 @@ const Puzzle = React.createClass({
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
       const scaleFactor = Math.min(
-        width / (maxWaveDepth * 2 + pieceContentSize * nCols),
-        height / (maxWaveDepth * 2 + pieceContentSize * nRows)
+        width / (maxWaveDepth * 2 + pieceContentSize * this.nCols),
+        height / (maxWaveDepth * 2 + pieceContentSize * this.nRows)
       );
       const tileSize = pieceContentSize * scaleFactor;
 
@@ -155,10 +156,10 @@ const Puzzle = React.createClass({
   tick(ms) {
     const time = ms * 0.001;
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nRows, time);
+      return generateWaves(waveData, pieceContentSize, this.nRows, time);
     });
     const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, nCols, time);
+      return generateWaves(waveData, pieceContentSize, this.nCols, time);
     });
 
     this.setState({ time, verticalWaves, horizontalWaves });
@@ -312,7 +313,7 @@ const Puzzle = React.createClass({
           return neighbor;
         }
       }
-      if (row < nRows - 1) {
+      if (row < this.nRows - 1) {
         const neighbor = checkNeighbor(piece, 1, 0);
 
         if (neighbor) {
@@ -326,7 +327,7 @@ const Puzzle = React.createClass({
           return neighbor;
         }
       }
-      if (col < nCols - 1) {
+      if (col < this.nCols - 1) {
         const neighbor = checkNeighbor(piece, 0, 1);
 
         if (neighbor) {
