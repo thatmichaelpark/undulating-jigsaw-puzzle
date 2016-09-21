@@ -1,13 +1,8 @@
-const maxWaveDepth = 10;
-const nWaves = 3;
-const pieceContentSize = 50;
-const pieceActualSize = pieceContentSize + 2 * maxWaveDepth;
-
 import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const hitTest = function(mx, my, piece) {
+const hitTest = function(mx, my, piece, pieceContentSize) {
 // mx, my: mouse coordinates
 // piece.x, piece.y: piece center coordinates
 // piece.rot: piece's rotation (0, 90, 180, or 270)
@@ -44,7 +39,7 @@ const hitTest = function(mx, my, piece) {
   return left < cx && cx < right && top < cy && cy < bottom;
 };
 
-const createWaveData = (nWaveData) => {
+const createWaveData = (nWaveData, nWaves, maxWaveDepth) => {
   const waveData = [];
 
   for (let i = 0; i <= nWaveData; ++i) {
@@ -91,7 +86,12 @@ const Puzzle = React.createClass({
   nRows: 4,
   nCols: 5,
 
+  maxWaveDepth: 10,
+  nWaves: 3,
+  pieceContentSize: 150,
+
   getInitialState() {
+    this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
 
     const pieceDataArray = [];
     const sortedPieceData = [];
@@ -103,8 +103,8 @@ const Puzzle = React.createClass({
         const pieceData = {
           row,
           col,
-          x: pieceContentSize + col * (pieceContentSize - 30),
-          y: pieceContentSize + row * (pieceContentSize - 30),
+          x: this.pieceContentSize + col * (this.pieceContentSize - 30),
+          y: this.pieceContentSize + row * (this.pieceContentSize - 30),
           rot: 0  // 0, 90, 180, 270
         };
 
@@ -115,14 +115,14 @@ const Puzzle = React.createClass({
       pieceDataArray.push(pieceDataRow);
     }
 
-    const waveHorizontalData = createWaveData(this.nRows);
-    const waveVerticalData = createWaveData(this.nCols);
+    const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth);
+    const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth);
     const time = 0;
     const verticalWaves = waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, this.nRows, time);
+      return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
     });
     const horizontalWaves = waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, this.nCols, time);
+      return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
     });
 
     return {
@@ -143,10 +143,10 @@ const Puzzle = React.createClass({
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
       const scaleFactor = Math.min(
-        width / (maxWaveDepth * 2 + pieceContentSize * this.nCols),
-        height / (maxWaveDepth * 2 + pieceContentSize * this.nRows)
+        width / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nCols),
+        height / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nRows)
       );
-      const tileSize = pieceContentSize * scaleFactor;
+      const tileSize = this.pieceContentSize * scaleFactor;
 
       this.setState({ scaleFactor, tileSize, imgLoaded: true });
       requestAnimationFrame(this.tick);
@@ -156,10 +156,10 @@ const Puzzle = React.createClass({
   tick(ms) {
     const time = ms * 0.001;
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, this.nRows, time);
+      return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
     });
     const horizontalWaves = this.state.waveHorizontalData.map((waveData) => {
-      return generateWaves(waveData, pieceContentSize, this.nCols, time);
+      return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
     });
 
     this.setState({ time, verticalWaves, horizontalWaves });
@@ -212,7 +212,7 @@ const Puzzle = React.createClass({
     for (let i = sortedPieceData.length; (i -= 1) >= 0;) {
       const piece = sortedPieceData[i];
 
-      if (hitTest(mx, my, piece)) {
+      if (hitTest(mx, my, piece, this.pieceContentSize)) {
         // bring hit piece's group to top
         this.clickedPiece = piece;
         this.bringGroupToTop(this.clickedPiece.group);
@@ -275,20 +275,20 @@ const Puzzle = React.createClass({
 
       switch (piece.rot) {
         case 0:
-          x += dcol * pieceContentSize;
-          y += drow * pieceContentSize;
+          x += dcol * this.pieceContentSize;
+          y += drow * this.pieceContentSize;
           break;
         case 90:
-          x -= drow * pieceContentSize;
-          y += dcol * pieceContentSize;
+          x -= drow * this.pieceContentSize;
+          y += dcol * this.pieceContentSize;
           break;
         case 180:
-          x -= dcol * pieceContentSize;
-          y -= drow * pieceContentSize;
+          x -= dcol * this.pieceContentSize;
+          y -= drow * this.pieceContentSize;
           break;
         default: // 270
-          x += drow * pieceContentSize;
-          y -= dcol * pieceContentSize;
+          x += drow * this.pieceContentSize;
+          y -= dcol * this.pieceContentSize;
           break;
       }
       const dx = neighbor.x - x;
@@ -395,9 +395,9 @@ const Puzzle = React.createClass({
                 horizontalWaves={this.state.horizontalWaves}
                 img={this.state.img}
                 key={index}
-                maxWaveDepth={maxWaveDepth}
-                pieceActualSize={pieceActualSize}
-                pieceContentSize={pieceContentSize}
+                maxWaveDepth={this.maxWaveDepth}
+                pieceActualSize={this.pieceActualSize}
+                pieceContentSize={this.pieceContentSize}
                 rot={piece.rot}
                 row={piece.row}
                 scaleFactor={this.state.scaleFactor}
