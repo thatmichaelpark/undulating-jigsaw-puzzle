@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
+import axios from 'axios';
 
 const styles = {
   tabs: {
@@ -11,19 +12,31 @@ const styles = {
 };
 
 const Puzzles = React.createClass({
+  getInitialState() {
+    return {
+      puzzles: []
+    };
+  },
+  componentDidMount() {
+    axios.get('/api/puzzles')
+      .then((result) => {
+        console.log(result);
+        this.setState({ puzzles: result.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
   render() {
-    const puzzleData4x4 = [
-      { id: 1, image: 'images/cat800.jpeg' }
-    ];
     return (
       <Tabs style={styles.tabs}>
-        <Tab label="4 x 4" >
+        <Tab label="Easy" >
           <div>
             <p>
               This is an example tab.
             </p>
-            {puzzleData4x4.map((puzzle, index) => {
-              return <p key={index}><Link to={`/puzzle/${puzzle.id}`}>{puzzle.image}</Link></p>;
+            {this.state.puzzles.filter((puzzle) => puzzle.difficulty === 1).map((puzzle, index) => {
+              return <p key={index}><Link to={`/puzzle/${puzzle.id}`}>{puzzle.imageUrl}</Link></p>;
             })}
           </div>
         </Tab>

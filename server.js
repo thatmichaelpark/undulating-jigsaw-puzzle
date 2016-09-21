@@ -40,9 +40,11 @@ app.use(bodyParser.json());
 
 const users = require('./routes/users');
 const token = require('./routes/token');
+const puzzles = require('./routes/puzzles');
 
 app.use('/api', users);
 app.use('/api', token);
+app.use('/api', puzzles);
 
 app.use((_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

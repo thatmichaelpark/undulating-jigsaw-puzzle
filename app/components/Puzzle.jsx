@@ -135,7 +135,7 @@ const Puzzle = React.createClass({
   },
 
   componentDidMount() {
-    this.state.img.src = '/images/3x3.png';
+    this.state.img.src = '/images/clouds-06.jpg';
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
       const scaleFactor = Math.min(
