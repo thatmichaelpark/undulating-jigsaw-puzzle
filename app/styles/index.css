@@ -27,3 +27,10 @@ body {
   display: flex;
   justify-content: center;
 }
+
+.tab-contents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
