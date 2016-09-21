@@ -83,14 +83,20 @@ const generateWaves = (waveData, pieceSize, nPieces, time) => {
 
 const Puzzle = React.createClass({
 
-  nRows: 4,
-  nCols: 5,
-
-  maxWaveDepth: 10,
-  nWaves: 3,
-  pieceContentSize: 150,
-
   getInitialState() {
+    return {
+      img: document.createElement('img'),
+      imgLoaded: false,
+      time: 0,
+    };
+  },
+
+  componentDidMount() {
+    this.nRows = 4;
+    this.nCols = 5;
+    this.maxWaveDepth = 10;
+    this.nWaves = 3;
+    this.pieceContentSize = 150;
     this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
 
     const pieceDataArray = [];
@@ -125,20 +131,15 @@ const Puzzle = React.createClass({
       return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
     });
 
-    return {
-      img: document.createElement('img'),
-      imgLoaded: false,
+    this.setState({
       waveHorizontalData,
       waveVerticalData,
       pieceDataArray,
       sortedPieceData,
-      time: 0,
       verticalWaves,
       horizontalWaves
-    };
-  },
+    });
 
-  componentDidMount() {
     this.state.img.src = '/images/clouds-06.jpg';
     this.state.img.addEventListener('load', () => {
       const { width, height } = this.state.img;
