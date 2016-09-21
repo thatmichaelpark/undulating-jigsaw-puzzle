@@ -29,8 +29,15 @@ const Nav = React.createClass({
   handleTitleTouchTap() {
     this.props.router.push('/puzzles');
   },
-  handleLoginOk() {
-    this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+  handleLoginOk(username, password) {
+    axios.post('/api/token', { username, password })
+      .then((result) => {
+        console.log('result', result.data);
+        this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+      })
+      .catch((err) => {
+        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+      });
   },
   handleLoginCancel() {
     this.setState({ loginIsOpen: false });
@@ -39,7 +46,7 @@ const Nav = React.createClass({
     axios.post('/api/users', { username, password })
       .then((result) => {
         console.log('result', result.data);
-        this.setState({ loggedIn: true, signupIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+        this.setState({ loggedIn: true, signupIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'Signup successful; you are now logged in' });
       })
       .catch((err) => {
         this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
