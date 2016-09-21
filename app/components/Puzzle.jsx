@@ -101,11 +101,13 @@ const Puzzle = React.createClass({
         this.nWaves = result.data.nWaves;
         this.maxFreq = result.data.maxFreq;
         this.maxV = result.data.maxV;
+        this.hasRotatedPieces = result.data.hasRotatedPieces;
         this.pieceContentSize = result.data.pieceContentSize;
         this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
 
         const pieceDataArray = [];
         const sortedPieceData = [];
+        const { width, height } = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
         for (let row = 0; row < this.nRows; ++row) {
           const pieceDataRow = [];
@@ -114,9 +116,11 @@ const Puzzle = React.createClass({
             const pieceData = {
               row,
               col,
-              x: this.pieceContentSize + col * (this.pieceContentSize - 30),
-              y: this.pieceContentSize + row * (this.pieceContentSize - 30),
-              rot: 0  // 0, 90, 180, 270
+              x: Math.random() * width,
+              y: Math.random() * height,
+              rot: this.hasRotatedPieces ?
+                Math.floor(Math.random() * 4) * 90 :
+                0
             };
 
             pieceData.group = [pieceData];
