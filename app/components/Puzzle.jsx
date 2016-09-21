@@ -145,7 +145,6 @@ const Puzzle = React.createClass({
           horizontalWaves
         });
 
-        console.log(result.data);
         this.state.img.src = result.data.imageUrl;
         this.state.img.addEventListener('load', () => {
           const { width, height } = this.state.img;
@@ -156,7 +155,7 @@ const Puzzle = React.createClass({
           const tileSize = this.pieceContentSize * scaleFactor;
 
           this.setState({ scaleFactor, tileSize, imgLoaded: true });
-          requestAnimationFrame(this.tick);
+          this.raf = requestAnimationFrame(this.tick);
         });
       })
       .catch((err) => {
@@ -174,7 +173,11 @@ const Puzzle = React.createClass({
     });
 
     this.setState({ time, verticalWaves, horizontalWaves });
-    requestAnimationFrame(this.tick);
+    this.raf = requestAnimationFrame(this.tick);
+  },
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
   },
 
   moveGroup(group, dx, dy) {
