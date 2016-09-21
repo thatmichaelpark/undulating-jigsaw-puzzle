@@ -11,9 +11,9 @@ exports.seed = function(knex) {
         n_rows: 3,
         n_cols: 4,
         max_wave_depth: 10,
-        piece_content_size: 200,
+        piece_content_size: 150,
         max_freq: 5,
-        max_v: 10,
+        max_v: 2,
         n_waves: 3,
         image_url: '/images/clouds-06.jpg'
       }, {
@@ -22,8 +22,8 @@ exports.seed = function(knex) {
         n_rows: 4,
         n_cols: 4,
         max_wave_depth: 20,
-        piece_content_size: 200,
-        max_freq: 1,
+        piece_content_size: 150,
+        max_freq: 3,
         max_v: 1,
         n_waves: 2,
         image_url: '/images/cat800.jpg'

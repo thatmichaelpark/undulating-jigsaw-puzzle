@@ -11,6 +11,7 @@ exports.up = function(knex) {
     table.float('max_freq').notNullable().defaultTo(0);
     table.float('max_v').notNullable().defaultTo(0);
     table.integer('n_waves').notNullable().defaultTo(0);
+    table.bool('hasRotatedPieces').notNullable().defaultTo(false);
     table.string('image_url').notNullable().defaultTo('');
     table.string('background_color').notNullable().defaultTo('white');
     table.timestamps(true, true);

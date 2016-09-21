@@ -40,7 +40,7 @@ const hitTest = function(mx, my, piece, pieceContentSize) {
   return left < cx && cx < right && top < cy && cy < bottom;
 };
 
-const createWaveData = (nWaveData, nWaves, maxWaveDepth) => {
+const createWaveData = (nWaveData, nWaves, maxWaveDepth, maxFreq, maxV) => {
   const waveData = [];
 
   for (let i = 0; i <= nWaveData; ++i) {
@@ -49,8 +49,8 @@ const createWaveData = (nWaveData, nWaves, maxWaveDepth) => {
 
     for (let k = 0; k < nWaves; ++k) {
       const a = (Math.random() - 0.5);
-      const freq = Math.random() * 5;
-      const v = (Math.random() - 0.5) * 10;
+      const freq = Math.random() * maxFreq;
+      const v = (Math.random() - 0.5) * 2 * maxV;
 
       maxDepth += Math.abs(a);
       waveDatum.push({ a, freq, v });
@@ -99,6 +99,8 @@ const Puzzle = React.createClass({
         this.nCols = result.data.nCols;
         this.maxWaveDepth = result.data.maxWaveDepth;
         this.nWaves = result.data.nWaves;
+        this.maxFreq = result.data.maxFreq;
+        this.maxV = result.data.maxV;
         this.pieceContentSize = result.data.pieceContentSize;
         this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
 
@@ -124,8 +126,8 @@ const Puzzle = React.createClass({
           pieceDataArray.push(pieceDataRow);
         }
 
-        const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth);
-        const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth);
+        const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth, this.maxFreq, this.maxV);
+        const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth, this.maxFreq, this.maxV);
         const time = 0;
         const verticalWaves = waveVerticalData.map((waveData) => {
           return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
@@ -383,7 +385,7 @@ const Puzzle = React.createClass({
       top: '64px',
       bottom: 0,
       position: 'absolute',
-      backgroundColor: 'yellow',
+      backgroundColor: this.backgroundColor,
       overflow: 'auto'
     };
 
