@@ -13,8 +13,8 @@ const Nav = React.createClass({
   getInitialState() {
     return {
       loggedIn: cookie.load('NQJ_loggedIn'),
-      username: null,
-      userId: null,
+      username: cookie.load('NQJ_username'),
+      userId: cookie.load('NQJ_userId'),
       loginIsOpen: false,
       signupIsOpen: false,
       snackbarIsOpen: false,
@@ -33,7 +33,7 @@ const Nav = React.createClass({
   handleLoginOk(username, password) {
     axios.post('/api/token', { username, password })
       .then((result) => {
-        console.log('result', result.data);
+        console.log('login result', result.data);
         this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
       })
       .catch((err) => {
@@ -46,8 +46,20 @@ const Nav = React.createClass({
   handleSignupOk(username, password) {
     axios.post('/api/users', { username, password })
       .then((result) => {
-        console.log('result', result.data);
-        this.setState({ loggedIn: true, signupIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'Signup successful; you are now logged in' });
+        return axios.post('/api/token', { username, password })
+      })
+      .then((result) =>{
+        console.log('signup result', result.data);
+        const { userId } = result.data;
+
+        this.setState({
+          loggedIn: true,
+          username,
+          userId,
+          signupIsOpen: false,
+          snackbarIsOpen: true,
+          snackbarMessage: 'Signup successful; you are now logged in'
+        });
       })
       .catch((err) => {
         this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });

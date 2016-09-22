@@ -26,7 +26,7 @@ router.post('/token', (req, res, next) => {
       return bcrypt.compare(req.body.password, user.hashedPassword);
     })
     .then(() => {
-      const expiry = new Date(Date.now() + 1000 * 60 /* * 60 */ * 3);
+      const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3);
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: '3h'
       });
@@ -47,7 +47,12 @@ router.post('/token', (req, res, next) => {
         secure: router.get('env') === 'production'
       });
 
-      res.sendStatus(200);
+      res.cookie('NQJ_userId', user.id, {
+        expires: expiry,
+        secure: router.get('env') === 'production'
+      });
+
+      res.send({ username: user.username, userId: user.id });
     })
     .catch(bcrypt.MISMATCH_ERROR, () => {
       throw boom.create(401, 'User could not be logged in');
@@ -61,6 +66,7 @@ router.delete('/token', (req, res) => {
   res.clearCookie('NQJ_accessToken');
   res.clearCookie('NQJ_loggedIn');
   res.clearCookie('NQJ_username');
+  res.clearCookie('NQJ_userId');
 
   res.sendStatus(200);
 });
