@@ -26,7 +26,7 @@ router.post('/token', (req, res, next) => {
       return bcrypt.compare(req.body.password, user.hashedPassword);
     })
     .then(() => {
-      const expiry = new Date(Date.now() + 1000 * 60 * 60 * 3);
+      const expiry = new Date(Date.now() + 1000 * 60 /* * 60 */ * 3);
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
         expiresIn: '3h'
       });

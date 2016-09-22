@@ -7,11 +7,12 @@ import React from 'react';
 import Signup from 'components/Signup'
 import Snackbar from 'material-ui/Snackbar';
 import { withRouter } from 'react-router';
+import cookie from 'react-cookie';
 
 const Nav = React.createClass({
   getInitialState() {
     return {
-      loggedIn: false,
+      loggedIn: cookie.load('NQJ_loggedIn'),
       username: null,
       userId: null,
       loginIsOpen: false,
@@ -56,7 +57,13 @@ const Nav = React.createClass({
     this.setState({ signupIsOpen: false });
   },
   handleLogoutTouchTap() {
-    this.setState({ loggedIn: false, username: null, userId: null, snackbarIsOpen: true, snackbarMessage: 'You have logged out' });
+    axios.delete('/api/token')
+      .then(() => {
+        this.setState({ loggedIn: false, username: null, userId: null, snackbarIsOpen: true, snackbarMessage: 'You have logged out' });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
   handleSnackbarRequestClose() {
     this.setState({ snackbarIsOpen: false });
