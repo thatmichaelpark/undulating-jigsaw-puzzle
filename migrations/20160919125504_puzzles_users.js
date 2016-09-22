@@ -15,6 +15,7 @@ exports.up = function(knex) {
       .inTable('users')
       .onDelete('CASCADE')
       .index();
+    table.integer('puzzle_solving_time');
     table.timestamps(true, true);
   });
 };

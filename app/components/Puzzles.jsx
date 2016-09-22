@@ -19,7 +19,7 @@ const Puzzles = React.createClass({
     };
   },
   componentDidMount() {
-    axios.get('/api/puzzles')
+    axios.get('/api/puzzles/full')
       .then((result) => {
         this.setState({ puzzles: result.data });
       })
@@ -46,6 +46,13 @@ const Puzzles = React.createClass({
               >
                 <img src={puzzle.imageUrl} />
               </CardMedia>
+              {
+                puzzle.times ?
+                  <CardText>
+                    blah blah blah
+                  </CardText> :
+                  null
+              }
             </Card>
           </Link>
         );

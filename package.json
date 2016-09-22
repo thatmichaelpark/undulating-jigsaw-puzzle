@@ -14,6 +14,7 @@
     "deploy": "rm -rf public; brunch build --production; surge public",
     "knex": "knex",
     "lint": "eslint --ext .js,.jsx --ignore-pattern public",
+    "resetdb": "knex migrate:rollback; knex migrate:latest; knex seed:run",
     "start": "brunch watch --server",
     "estart": "electron ."
   },
