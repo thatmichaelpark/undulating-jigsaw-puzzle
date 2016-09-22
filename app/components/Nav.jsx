@@ -62,29 +62,39 @@ const Nav = React.createClass({
     this.setState({ snackbarIsOpen: false });
   },
   render() {
+    const styles = {
+      flatButton: {
+        color: 'white',
+        height: '64px',
+        lineHeight: '64px'
+      }
+    };
     return (
       <div>
         <AppBar
           onTitleTouchTap={this.handleTitleTouchTap}
           title="Not-Quite-Jigsaw Puzzles"
         >
-        {this.state.loggedIn ? (
-          <FlatButton
-            label="Log Out"
-            onTouchTap={this.handleLogoutTouchTap}
-          />
-        ) : (
-          <div>
+          {this.state.loggedIn ? (
             <FlatButton
-              label="Sign Up"
-              onTouchTap={this.handleSignupTouchTap}
+              label="Log Out"
+              onTouchTap={this.handleLogoutTouchTap}
+              style={styles.flatButton}
             />
-            <FlatButton
-              label="Log In"
-              onTouchTap={this.handleLoginTouchTap}
-            />
-          </div>
-        )}
+          ) : (
+            <div>
+              <FlatButton
+                label="Sign Up"
+                onTouchTap={this.handleSignupTouchTap}
+                style={styles.flatButton}
+              />
+              <FlatButton
+                label="Log In"
+                onTouchTap={this.handleLoginTouchTap}
+                style={styles.flatButton}
+              />
+            </div>
+          )}
         </AppBar>
         <div>
           {this.props.children}
