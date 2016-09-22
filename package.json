@@ -1,18 +1,21 @@
 {
-  "name": "",
+  "name": "NotQuiteJigsawPuzzles",
+  "productName": "NQJP",
   "version": "0.1.0",
-  "author": "",
-  "description": "",
+  "author": "Michael Park",
+  "description": "Not-quite-jigsaw puzzles",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": ""
   },
+  "main": "main.js",
   "scripts": {
     "deploy": "rm -rf public; brunch build --production; surge public",
     "knex": "knex",
     "lint": "eslint --ext .js,.jsx --ignore-pattern public",
-    "start": "brunch watch --server"
+    "start": "brunch watch --server",
+    "estart": "electron ."
   },
   "dependencies": {
     "axios": "^0.14.0",
@@ -42,6 +45,7 @@
     "brunch": "^2.8.2",
     "clean-css-brunch": "^2.0.0",
     "dotenv": "^2.0.0",
+    "electron-prebuilt": "^1.4.1",
     "eslint": "^3.4.0",
     "eslint-config-ryansobol": "^9.1.1",
     "javascript-brunch": "^2.0.0",
