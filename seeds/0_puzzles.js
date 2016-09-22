@@ -6,7 +6,6 @@ exports.seed = function(knex) {
   return knex('puzzles').del()
     .then(() => {
       return knex('puzzles').insert([{
-        difficulty: 1,
         n_rows: 2,
         n_cols: 3,
         max_wave_depth: 20,
@@ -18,7 +17,6 @@ exports.seed = function(knex) {
         image_url: '/images/seattle.jpg',
         background_color: '#db9276'
       }, {
-        difficulty: 1,
         n_rows: 3,
         n_cols: 4,
         max_wave_depth: 15,
@@ -30,7 +28,6 @@ exports.seed = function(knex) {
         image_url: '/images/clouds-06.jpg',
         background_color: '#5979AF'
       }, {
-        difficulty: 1,
         n_rows: 4,
         n_cols: 4,
         max_wave_depth: 20,
@@ -41,9 +38,8 @@ exports.seed = function(knex) {
         has_rotated_pieces: false,
         image_url: '/images/cat800.jpg'
       }, {
-        difficulty: 1,
         n_rows: 4,
-        n_cols: 4,
+        n_cols: 6,
         max_wave_depth: 20,
         piece_content_size: 150,
         max_freq: 3,
@@ -53,20 +49,19 @@ exports.seed = function(knex) {
         image_url: '/images/fractal-026.jpg',
         background_color: '#D8780A'
       }, {
-        difficulty: 2,
         n_rows: 4,
-        n_cols: 4,
+        n_cols: 5,
         max_wave_depth: 20,
         piece_content_size: 150,
         max_freq: 3,
         max_v: 1,
         n_waves: 2,
         has_rotated_pieces: true,
-        image_url: '/images/JellyBellyBeans.jpg'
+        image_url: '/images/JellyBellyBeans.jpg',
+        background_color: '#F2B5B5'
       }, {
-        difficulty: 2,
         n_rows: 4,
-        n_cols: 4,
+        n_cols: 6,
         max_wave_depth: 20,
         piece_content_size: 150,
         max_freq: 3,
@@ -74,6 +69,16 @@ exports.seed = function(knex) {
         n_waves: 2,
         has_rotated_pieces: true,
         image_url: '/images/jellyfish.jpg'
+      }, {
+        n_rows: 5,
+        n_cols: 9,
+        max_wave_depth: 20,
+        piece_content_size: 100,
+        max_freq: 3,
+        max_v: 1,
+        n_waves: 3,
+        has_rotated_pieces: true,
+        image_url: '/images/fractal-1119594_960_720.jpg'
       }]);
     })
     .then(() => {

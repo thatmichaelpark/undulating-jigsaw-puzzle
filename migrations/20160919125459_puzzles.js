@@ -3,7 +3,6 @@
 exports.up = function(knex) {
   return knex.schema.createTable('puzzles', (table) => {
     table.increments();
-    table.integer('difficulty').notNullable().defaultTo(1);
     table.integer('n_rows').notNullable().defaultTo(1);
     table.integer('n_cols').notNullable().defaultTo(1);
     table.integer('max_wave_depth').notNullable().defaultTo(0);

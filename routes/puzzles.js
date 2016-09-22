@@ -21,7 +21,7 @@ router.get('/puzzles', (req, res, next) => {
 
 // GET /puzzles/full -- puzzles data augmented with puzzle_solving_time/username
 router.get('/puzzles/full', (req, res, next) => {
-  knex.raw('select puzzles.id, image_url, n_rows, n_cols, background_color, difficulty, has_rotated_pieces, n_waves, max_wave_depth, max_freq, max_v, piece_content_size, times from (select blah.puzzle_id, array_agg((puzzle_solving_time, username)) as times from users inner join (select * from puzzles_users order by puzzle_solving_time) as blah on (users.id = blah.user_id) group by puzzle_id) as foo right join puzzles on (puzzles.id = foo.puzzle_id) order by id')
+  knex.raw('select puzzles.id, image_url, n_rows, n_cols, background_color, has_rotated_pieces, n_waves, max_wave_depth, max_freq, max_v, piece_content_size, times from (select blah.puzzle_id, array_agg((puzzle_solving_time, username)) as times from users inner join (select * from puzzles_users order by puzzle_solving_time) as blah on (users.id = blah.user_id) group by puzzle_id) as foo right join puzzles on (puzzles.id = foo.puzzle_id) order by id')
     .then((puzzles) => {
       res.send(camelizeKeys(puzzles.rows));
     })
