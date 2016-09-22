@@ -12,7 +12,7 @@ exports.seed = function(knex) {
         max_wave_depth: 20,
         piece_content_size: 250,
         max_freq: 2,
-        max_v: 2,
+        max_v: 0.1,
         n_waves: 3,
         has_rotated_pieces: false,
         image_url: '/images/seattle.jpg',
@@ -21,10 +21,10 @@ exports.seed = function(knex) {
         difficulty: 1,
         n_rows: 3,
         n_cols: 4,
-        max_wave_depth: 10,
+        max_wave_depth: 15,
         piece_content_size: 150,
         max_freq: 5,
-        max_v: 2,
+        max_v: 0.5,
         n_waves: 3,
         has_rotated_pieces: false,
         image_url: '/images/clouds-06.jpg',
@@ -50,7 +50,8 @@ exports.seed = function(knex) {
         max_v: 1,
         n_waves: 2,
         has_rotated_pieces: true,
-        image_url: '/images/fractal-026.jpg'
+        image_url: '/images/fractal-026.jpg',
+        background_color: '#D8780A'
       }, {
         difficulty: 2,
         n_rows: 4,
