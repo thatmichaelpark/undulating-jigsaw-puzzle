@@ -7,6 +7,18 @@ exports.seed = function(knex) {
     .then(() => {
       return knex('puzzles').insert([{
         difficulty: 1,
+        n_rows: 2,
+        n_cols: 3,
+        max_wave_depth: 20,
+        piece_content_size: 250,
+        max_freq: 2,
+        max_v: 2,
+        n_waves: 3,
+        has_rotated_pieces: false,
+        image_url: '/images/seattle.jpg',
+        background_color: '#db9276'
+      }, {
+        difficulty: 1,
         n_rows: 3,
         n_cols: 4,
         max_wave_depth: 10,
@@ -15,7 +27,8 @@ exports.seed = function(knex) {
         max_v: 2,
         n_waves: 3,
         has_rotated_pieces: false,
-        image_url: '/images/clouds-06.jpg'
+        image_url: '/images/clouds-06.jpg',
+        background_color: '#5979AF'
       }, {
         difficulty: 1,
         n_rows: 4,

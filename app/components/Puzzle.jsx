@@ -101,6 +101,7 @@ const Puzzle = React.createClass({
         this.nWaves = result.data.nWaves;
         this.maxFreq = result.data.maxFreq;
         this.maxV = result.data.maxV;
+        this.backgroundColor = result.data.backgroundColor;
         this.hasRotatedPieces = result.data.hasRotatedPieces;
         this.pieceContentSize = result.data.pieceContentSize;
         this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
@@ -160,6 +161,12 @@ const Puzzle = React.createClass({
 
           this.setState({ scaleFactor, tileSize, imgLoaded: true });
           this.raf = requestAnimationFrame(this.tick);
+
+          this.elapsedTime = 0;
+          this.timer = setInterval(() => {
+            this.elapsedTime += 1;
+            console.log('tick');
+          }, 1000);
         });
       })
       .catch((err) => {
@@ -182,6 +189,9 @@ const Puzzle = React.createClass({
 
   componentWillUnmount() {
     cancelAnimationFrame(this.raf);
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
 
   moveGroup(group, dx, dy) {
@@ -375,6 +385,10 @@ const Puzzle = React.createClass({
           // and bring combined group to top
           this.bringGroupToTop(piece.group);
 
+          if (piece.group.length === this.nRows * this.nCols) {
+            clearInterval(this.timer);
+            console.log(this.elapsedTime);
+          }
           break;
         }
       }
