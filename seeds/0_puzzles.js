@@ -9,7 +9,7 @@ exports.seed = function(knex) {
         n_rows: 2,
         n_cols: 3,
         max_wave_depth: 20,
-        piece_content_size: 250,
+        piece_content_size: 200,
         max_freq: 2,
         max_v: 0.1,
         n_waves: 3,
@@ -38,8 +38,8 @@ exports.seed = function(knex) {
         has_rotated_pieces: false,
         image_url: '/images/cat800.jpg'
       }, {
-        n_rows: 4,
-        n_cols: 6,
+        n_rows: 3,
+        n_cols: 5,
         max_wave_depth: 20,
         piece_content_size: 150,
         max_freq: 3,
@@ -52,7 +52,7 @@ exports.seed = function(knex) {
         n_rows: 4,
         n_cols: 5,
         max_wave_depth: 20,
-        piece_content_size: 150,
+        piece_content_size: 120,
         max_freq: 3,
         max_v: 1,
         n_waves: 2,
@@ -63,12 +63,13 @@ exports.seed = function(knex) {
         n_rows: 4,
         n_cols: 6,
         max_wave_depth: 20,
-        piece_content_size: 150,
+        piece_content_size: 120,
         max_freq: 3,
         max_v: 1,
         n_waves: 2,
         has_rotated_pieces: true,
-        image_url: '/images/jellyfish.jpg'
+        image_url: '/images/jellyfish.jpg',
+        background_color: '#0F74FF'
       }, {
         n_rows: 5,
         n_cols: 9,
@@ -78,7 +79,8 @@ exports.seed = function(knex) {
         max_v: 1,
         n_waves: 3,
         has_rotated_pieces: true,
-        image_url: '/images/fractal-1119594_960_720.jpg'
+        image_url: '/images/fractal-1119594_960_720.jpg',
+        background_color: '#EDD2AC'
       }]);
     })
     .then(() => {
