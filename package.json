@@ -10,6 +10,9 @@
     "url": ""
   },
   "main": "main.js",
+  "engines": {
+    "node": "6.4.0"
+  },
   "scripts": {
     "deploy": "rm -rf public; brunch build --production; surge public",
     "knex": "knex",
@@ -36,7 +39,10 @@
     "react-cookie": "^0.4.8",
     "react-dom": "^15.3.1",
     "react-router": "^2.8.1",
-    "react-tap-event-plugin": "^1.0.0"
+    "react-tap-event-plugin": "^1.0.0",
+    "javascript-brunch": "^2.0.0",
+    "postcss-brunch": "^2.0.1",
+    "uglify-js-brunch": "^2.0.1"
   },
   "devDependencies": {
     "auto-reload-brunch": "^2.7.1",
@@ -49,9 +55,6 @@
     "electron-prebuilt": "^1.4.1",
     "eslint": "^3.4.0",
     "eslint-config-ryansobol": "^9.1.1",
-    "javascript-brunch": "^2.0.0",
-    "postcss-brunch": "^2.0.1",
-    "surge": "^0.18.0",
-    "uglify-js-brunch": "^2.0.1"
+    "surge": "^0.18.0"
   }
 }
