@@ -28,21 +28,24 @@ const Welcome = React.createClass({
       <div>
         <Nav />
         <Paper style={styles.paper} zDepth={0}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        An experimental variation on traditional jigsaw puzzles. The pieces
+        of these puzzles have borders that vary over time. Different puzzles
+        vary at different rates.
         <div style={styles.div}>
           <Card style={styles.card} zDepth={0}>
             <CardText>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Left-click and drag pieces next to other pieces; if the pieces match, they'll click together.
             </CardText>
           </Card>
           <Card style={styles.card} zDepth={0}>
             <CardText>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              Some puzzles require you to rotate pieces. Right-click a piece to rotate it clockwise 90°; to rotate counterclockwise, right-click while holding down the shift key.
             </CardText>
           </Card>
           <Card style={styles.card} zDepth={0}>
             <CardText>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              You don't <em>have</em> to log in, but if you do, your puzzle times will be
+              recorded.
             </CardText>
           </Card>
         </div>
