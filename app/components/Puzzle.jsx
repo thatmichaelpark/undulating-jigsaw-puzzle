@@ -93,7 +93,7 @@ const Puzzle = React.createClass({
   },
 
   componentDidMount() {
-    axios.get(`/api/puzzles/${this.props.params.puzzleId}`)
+    axios.get(`/api/puzzles/${this.props.puzzleId}`)
       .then((result) =>{
         this.nRows = result.data.nRows;
         this.nCols = result.data.nCols;
@@ -161,12 +161,6 @@ const Puzzle = React.createClass({
 
           this.setState({ scaleFactor, tileSize, imgLoaded: true });
           this.raf = requestAnimationFrame(this.tick);
-
-          this.elapsedTime = 0;
-          this.timer = setInterval(() => {
-            this.elapsedTime += 1;
-            console.log('tick');
-          }, 1000);
         });
       })
       .catch((err) => {
@@ -189,9 +183,6 @@ const Puzzle = React.createClass({
 
   componentWillUnmount() {
     cancelAnimationFrame(this.raf);
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   },
 
   moveGroup(group, dx, dy) {

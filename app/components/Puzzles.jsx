@@ -1,4 +1,5 @@
 import { Card, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import Nav from 'components/Nav';
 import React from 'react';
 import { Link } from 'react-router';
 // import { Tabs, Tab } from 'material-ui/Tabs';
@@ -101,8 +102,11 @@ const Puzzles = React.createClass({
     );
 
     return (
-      <div className='tab-contents'>
-        {makeCards()}
+      <div>
+        <Nav />
+        <div className='tab-contents'>
+          {makeCards()}
+        </div>
       </div>
     );
   }

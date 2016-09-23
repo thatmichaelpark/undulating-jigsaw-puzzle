@@ -1,7 +1,6 @@
 import { IndexRoute, Route, Router, browserHistory } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Nav from 'components/Nav';
-import Puzzle from 'components/Puzzle';
+import PuzzleParent from 'components/PuzzleParent';
 import Puzzles from 'components/Puzzles';
 import React from 'react';
 import Welcome from 'components/Welcome';
@@ -14,10 +13,10 @@ const App = React.createClass({
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <Router history={browserHistory}>
-          <Route component={Nav} path="/" >
+          <Route path="/" >
             <IndexRoute component={Welcome} />
             <Route component={Puzzles} path="puzzles" />
-            <Route component={Puzzle} path="puzzle/:puzzleId" />
+            <Route component={PuzzleParent} path="puzzle/:puzzleId" />
           </Route>
         </Router>
       </MuiThemeProvider>
