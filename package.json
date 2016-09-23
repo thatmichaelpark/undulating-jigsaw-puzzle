@@ -15,6 +15,7 @@
   },
   "scripts": {
     "deploy": "rm -rf public; brunch build --production; surge public",
+    "heroku-postbuild": "brunch build",
     "knex": "knex",
     "lint": "eslint --ext .js,.jsx --ignore-pattern public",
     "resetdb": "knex migrate:rollback; knex migrate:latest; knex seed:run",
