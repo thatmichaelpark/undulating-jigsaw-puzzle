@@ -21,6 +21,11 @@ const Nav = React.createClass({
       snackbarMessage: ''
     };
   },
+  componentDidMount() {
+    if (this.state.loggedIn) {
+      this.props.router.push('/puzzles');
+    }
+  },
   handleLoginTouchTap() {
     this.setState({ loginIsOpen: true });
   },
@@ -33,8 +38,8 @@ const Nav = React.createClass({
   handleLoginOk(username, password) {
     axios.post('/api/token', { username, password })
       .then((result) => {
-        console.log('login result', result.data);
         this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+        this.props.router.push('/puzzles');
       })
       .catch((err) => {
         this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
@@ -59,6 +64,7 @@ const Nav = React.createClass({
           snackbarIsOpen: true,
           snackbarMessage: 'Signup successful; you are now logged in'
         });
+        this.props.router.push('/puzzles');
       })
       .catch((err) => {
         this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
@@ -71,6 +77,7 @@ const Nav = React.createClass({
     axios.delete('/api/token')
       .then(() => {
         this.setState({ loggedIn: false, username: null, userId: null, snackbarIsOpen: true, snackbarMessage: 'You have logged out' });
+        this.props.router.push('/');
       })
       .catch((err) => {
         console.log(err);

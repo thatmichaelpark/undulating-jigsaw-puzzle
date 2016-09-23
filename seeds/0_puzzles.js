@@ -11,7 +11,7 @@ exports.seed = function(knex) {
         max_wave_depth: 20,
         piece_content_size: 200,
         max_freq: 2,
-        max_v: 0.3,
+        max_v: 0.5,
         n_waves: 3,
         has_rotated_pieces: false,
         image_url: '/images/seattle.jpg',
@@ -81,6 +81,17 @@ exports.seed = function(knex) {
         has_rotated_pieces: true,
         image_url: '/images/fractal-1119594_960_720.jpg',
         background_color: '#EDD2AC'
+      }, {
+        n_rows: 9,
+        n_cols: 9,
+        max_wave_depth: 10,
+        piece_content_size: 50,
+        max_freq: 3,
+        max_v: 1,
+        n_waves: 3,
+        has_rotated_pieces: true,
+        image_url: '/images/black.jpg',
+        background_color: 'black'
       }]);
     })
     .then(() => {
