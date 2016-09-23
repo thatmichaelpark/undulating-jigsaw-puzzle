@@ -170,6 +170,8 @@ const Puzzle = React.createClass({
 
   tick(ms) {
     const time = ms * 0.001;
+    this.time = time;
+
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
       return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
     });
@@ -178,6 +180,17 @@ const Puzzle = React.createClass({
     });
 
     this.setState({ time, verticalWaves, horizontalWaves });
+
+    if (this.isRotating) {
+      const dt = this.time - this.rotateStartTime;
+      if (dt < 1) {
+        this.rotateGroupStep(this.clickedPiece.group, this.rotateAngle * dt);
+      }
+      else {
+        this.isRotating = false;
+        this.rotateGroupEnd(this.clickedPiece.group, this.rotateAngle);
+      }
+    }
     this.raf = requestAnimationFrame(this.tick);
   },
 
@@ -209,10 +222,60 @@ const Puzzle = React.createClass({
     this.setState({ sortedPieceData: spd });
   },
 
+  rotateGroupInit(group) {
+    const spd = this.state.sortedPieceData.slice(); // copy
+
+    group.forEach((piece) => {
+      piece.x0 = piece.x;   // save original x, y, rot
+      piece.y0 = piece.y;
+      piece.rot0 = piece.rot;
+    });
+    this.setState({ sortedPieceData: spd });
+  },
+  rotateGroupStep(group, angle) {
+    // angle goes from 0 to 90 or -90
+    const spd = this.state.sortedPieceData.slice(); // copy
+    const rads = angle * Math.PI / 180;
+    const sin = Math.sin(rads);
+    const cos = Math.cos(rads);
+
+    group.forEach((piece) => {
+      piece.rot = piece.rot0 + angle;
+      const dx = piece.x0 - this.mx0;
+      const dy = piece.y0 - this.my0;
+      piece.x = this.mx0 + cos * dx - sin * dy;
+      piece.y = this.my0 + sin * dx + cos * dy;
+    });
+    this.setState({ sortedPieceData: spd });
+  },
+  rotateGroupEnd(group, angle) {
+    // angle === 90 or -90
+    const spd = this.state.sortedPieceData.slice(); // copy
+
+    group.forEach((piece) => {
+      piece.rot = (piece.rot0 + angle + 360) % 360;
+      const dx = piece.x0 - this.mx0;
+      const dy = piece.y0 - this.my0;
+      if (angle === 90) {
+        piece.x = this.mx0 - dy;
+        piece.y = this.my0 + dx;
+      }
+      else {
+        piece.x = this.mx0 + dy;
+        piece.y = this.my0 - dx;
+      }
+    });
+    this.setState({ sortedPieceData: spd });
+  },
+
   isDragging: false,
+  isRotating: false,
   mx0: 0,
   my0: 0,
   clickedPiece: null,
+  rotateStartTime: 0,
+  rotateAngle: 0, // 90 or -90 when rotating
+  time: 0,  // time in seconds based on requestAnimationFrame timer
 
   mouseCoords(event) {
     const div = ReactDOM.findDOMNode(this);
@@ -225,6 +288,10 @@ const Puzzle = React.createClass({
   },
 
   handleMouseDown(event) {
+    if (this.isRotating) {
+      return;
+    }
+
     const { sortedPieceData } = this.state;
     const { mx, my } = this.mouseCoords(event);
 
@@ -241,20 +308,11 @@ const Puzzle = React.createClass({
           this.isDragging = true;
         }
         else if (event.buttons === 2) {
-          const rotate = (piece, origin, ccw) => {
-            const dx = piece.x - origin.x;
-            const dy = piece.y - origin.y;
-            return ccw ?
-              { x: origin.x + dy, y: origin.y - dx} :
-              { x: origin.x - dy, y: origin.y + dx};
-          }
-          const ccw = event.shiftKey;
-          this.clickedPiece.group.forEach((piece) => {
-            piece.rot = (piece.rot + (ccw ? 270 : 90)) % 360;
-            const { x, y } = rotate(piece, this.clickedPiece, ccw);
-            piece.x = x;
-            piece.y = y;
-          });
+          this.isRotating = true;
+          this.rotateStartTime = this.time;
+          this.rotateAngle = event.shiftKey ? -90 : 90;
+
+          this.rotateGroupInit(this.clickedPiece.group);
         }
         break;
       }
