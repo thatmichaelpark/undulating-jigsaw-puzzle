@@ -11,7 +11,7 @@ exports.seed = function(knex) {
         max_wave_depth: 20,
         piece_content_size: 200,
         max_freq: 2,
-        max_v: 0.1,
+        max_v: 0.3,
         n_waves: 3,
         has_rotated_pieces: false,
         image_url: '/images/seattle.jpg',

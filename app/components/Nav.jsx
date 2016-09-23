@@ -49,7 +49,6 @@ const Nav = React.createClass({
         return axios.post('/api/token', { username, password })
       })
       .then((result) =>{
-        console.log('signup result', result.data);
         const { userId } = result.data;
 
         this.setState({

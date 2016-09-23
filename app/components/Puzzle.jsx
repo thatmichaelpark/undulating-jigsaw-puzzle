@@ -378,7 +378,8 @@ const Puzzle = React.createClass({
 
           if (piece.group.length === this.nRows * this.nCols) {
             clearInterval(this.timer);
-            console.log(this.elapsedTime);
+            this.timer = null;
+            this.props.gameOver();
           }
           break;
         }
