@@ -54,7 +54,7 @@ const Puzzles = React.createClass({
         return (
           <Card
             key={index}
-            style={{width: '25rem', margin: '1rem'}}
+            style={{width: '22rem', margin: '1rem'}}
             zDepth={4}
           >
             <Link to={`/puzzle/${puzzle.id}`}>

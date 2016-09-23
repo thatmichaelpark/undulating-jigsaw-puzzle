@@ -93,6 +93,8 @@ const Puzzle = React.createClass({
   },
 
   componentDidMount() {
+    this.clickSound = new Audio('/sounds/178186__snapper4298__camera-click-nikon.wav');
+
     axios.get(`/api/puzzles/${this.props.puzzleId}`)
       .then((result) =>{
         this.nRows = result.data.nRows;
@@ -431,6 +433,8 @@ const Puzzle = React.createClass({
         const neighbor = checkNeighbors(piece);
 
         if (neighbor) {
+          this.clickSound.play();
+
           // Combine piece's group and neighbor's group
           neighbor.group.forEach((np) => {
             piece.group.push(np);

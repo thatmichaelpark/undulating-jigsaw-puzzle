@@ -12,7 +12,7 @@ const Welcome = React.createClass({
   render() {
     const styles = {
       card: {
-        width: '20rem'
+        width: '18rem'
       },
       div: {
         display: 'flex',
