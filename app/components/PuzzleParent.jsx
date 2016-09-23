@@ -51,6 +51,7 @@ const PuzzleParent = React.createClass({
           handlePauseTouchTap={this.handlePauseTouchTap}
         />
         <Puzzle
+          paused={this.state.paused}
           puzzleId={this.props.params.puzzleId}
         />
         <Pause

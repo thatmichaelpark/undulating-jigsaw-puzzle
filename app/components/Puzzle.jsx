@@ -410,7 +410,7 @@ const Puzzle = React.createClass({
         onMouseUp={this.handleMouseUp}
         style={style}
       >
-        {this.state.imgLoaded ? (
+        {this.state.imgLoaded && !this.props.paused ? (
           this.state.sortedPieceData.map((piece, index) => {
             return (
               <Piece
