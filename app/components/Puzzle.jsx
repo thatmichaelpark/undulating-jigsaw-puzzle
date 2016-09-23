@@ -182,9 +182,15 @@ const Puzzle = React.createClass({
     this.setState({ time, verticalWaves, horizontalWaves });
 
     if (this.isRotating) {
-      const dt = this.time - this.rotateStartTime;
+      const rotateTime = 0.5;
+      const easing = (t) => {
+        // after https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+        const s = 1.70158;
+		    return (t = t - 1) * t * ((s + 1) * t + s) + 1;
+      };
+      const dt = (this.time - this.rotateStartTime) / rotateTime;
       if (dt < 1) {
-        this.rotateGroupStep(this.clickedPiece.group, this.rotateAngle * dt);
+        this.rotateGroupStep(this.clickedPiece.group, this.rotateAngle * easing(dt));
       }
       else {
         this.isRotating = false;
