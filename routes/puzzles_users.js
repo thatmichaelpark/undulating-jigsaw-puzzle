@@ -5,30 +5,27 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const knex = require('../knex');
-const { camelizeKeys } = require('humps');
+const { camelizeKeys, decamelizeKeys } = require('humps');
+const { checkAuth } = require('./middleware');
 
-router.get('/puzzles', (req, res, next) => {
-  knex('puzzles')
+router.get('/puzzles_users', (req, res, next) => {
+  knex('puzzles_users')
     .orderBy('id')
-    .then((puzzles) => {
-      res.send(camelizeKeys(puzzles));
+    .then((puzzles_users) => {
+      res.send(camelizeKeys(puzzles_users));
     })
     .catch((err) => {
       next(err);
     });
 });
 
-router.get('/puzzles/:id', (req, res, next) => {
-  knex('puzzles')
-    .where('id', req.params.id)
-    .first()
-    .then((puzzle) => {
-      if (puzzle) {
-        res.send(camelizeKeys(puzzle));
-      }
-      else {
-        res.sendStatus(404);
-      }
+router.post('/puzzles_users/:puzzleId/:userId', checkAuth, (req, res, next) => {
+  const { puzzleId, userId } = req.params;
+  const { puzzleSolvingTime } = req.body;
+  knex('puzzles_users')
+    .insert(decamelizeKeys({ puzzleId, userId, puzzleSolvingTime }), '*')
+    .then((result) => {
+      res.send(camelizeKeys(result));
     })
     .catch((err) => {
       next(err);

@@ -1,3 +1,24 @@
+TO DO                                       DONE
+
+                                            /api/puzzles_users
+
+Pause screen
+Pause screen: motivational quote api
+
+Game Over screen
+Game Over: update puzzles_users
+
+Electron
+
+Testing
+
+FOR LATER
+
+Animated rotation
+
+
+
+
 -- select array_agg((puzzle_solving_time, "user_id")) from puzzles_users group by puzzle_id;
 
 -- select * from users inner join puzzles_users on (users.id = puzzles_users.user_id);

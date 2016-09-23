@@ -35,16 +35,20 @@ app.use('/api', (req, res, next) => {
 });
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const users = require('./routes/users');
 const token = require('./routes/token');
 const puzzles = require('./routes/puzzles');
+const puzzlesUsers = require('./routes/puzzles_users');
 
 app.use('/api', users);
 app.use('/api', token);
 app.use('/api', puzzles);
+app.use('/api', puzzlesUsers);
 
 app.use((_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

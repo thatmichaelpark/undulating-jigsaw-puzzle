@@ -3,7 +3,8 @@
 const jwt = require('jsonwebtoken');
 
 const checkAuth = function(req, res, next) {
-  jwt.verify(req.cookies.NQJ_loggedIn_accessToken, process.env.JWT_SECRET,
+  console.log(req.cookies);
+  jwt.verify(req.cookies.NQJ_accessToken, process.env.JWT_SECRET,
     (err, decoded) => {
       if (err) {
         return res.sendStatus(401);
