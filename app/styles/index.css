@@ -1,36 +1,3 @@
 body {
   margin: 0;
 }
-
-.welcome {
-  outline: 1px solid green;
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  min-width: 500px;
-  margin: auto;
-  font-size: 1.5rem;
-}
-
-.welcome-columns {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-
-.welcome-column {
-  width: 10rem;
-}
-
-.welcome-button {
-  display: flex;
-  justify-content: center;
-}
-
-.tab-contents {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-}

@@ -8,10 +8,12 @@ import Slider from 'material-ui/Slider';
 import axios from 'axios';
 
 const styles = {
-  tabs: {
-    margin: '20px auto',
-    width: '80%',
-  },
+  cards: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  }
 };
 
 const Puzzles = React.createClass({
@@ -104,7 +106,7 @@ const Puzzles = React.createClass({
     return (
       <div>
         <Nav />
-        <div className='tab-contents'>
+        <div style={styles.cards}>
           {makeCards()}
         </div>
       </div>
