@@ -6,12 +6,14 @@ import ReactDOM from 'react-dom';
 const Piece = React.createClass({
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-find-dom-node
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
 
     this.paint(ctx);
   },
 
   componentDidUpdate() {
+    // eslint-disable-next-line react/no-find-dom-node
     const ctx = ReactDOM.findDOMNode(this).getContext('2d');
     const { pieceActualSize } = this.props;
 
@@ -28,23 +30,25 @@ const Piece = React.createClass({
     ctx.save();
     ctx.translate(maxWaveDepth, maxWaveDepth);
 
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    for (let i = 0; i < pieceContentSize; ++i) {
-      ctx.lineTo(verticalWaves[col][row * pieceContentSize + i], i);
-    }
-    for (let i = 0; i < pieceContentSize; ++i) {
-      ctx.lineTo(i, pieceContentSize +
-        horizontalWaves[row + 1][col * pieceContentSize + i]);
-    }
-    for (let i = pieceContentSize; (i -= 1) >= 0;) {
-      ctx.lineTo(pieceContentSize +
-        verticalWaves[col + 1][row * pieceContentSize + i], i);
-    }
-    for (let i = pieceContentSize; (i -= 1) >= 0;) {
-      ctx.lineTo(i, horizontalWaves[row][col * pieceContentSize + i]);
-    }
-    ctx.closePath();
+    (function drawFourSides() {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      for (let i = 0; i < pieceContentSize; ++i) {
+        ctx.lineTo(verticalWaves[col][row * pieceContentSize + i], i);
+      }
+      for (let i = 0; i < pieceContentSize; ++i) {
+        ctx.lineTo(i, pieceContentSize +
+          horizontalWaves[row + 1][col * pieceContentSize + i]);
+      }
+      for (let i = pieceContentSize; (i -= 1) >= 0;) {
+        ctx.lineTo(pieceContentSize +
+          verticalWaves[col + 1][row * pieceContentSize + i], i);
+      }
+      for (let i = pieceContentSize; (i -= 1) >= 0;) {
+        ctx.lineTo(i, horizontalWaves[row][col * pieceContentSize + i]);
+      }
+      ctx.closePath();
+    })();
     ctx.stroke();
     ctx.clip();
     ctx.translate(-maxWaveDepth, -maxWaveDepth);
