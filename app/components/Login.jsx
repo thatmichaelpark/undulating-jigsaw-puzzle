@@ -54,14 +54,14 @@ const Login = React.createClass({
 
       return this.setState({ errors: nextErrors });
     }
-    this.props.handleOk(this.state.username, this.state.password);
+    this.props.onHandleOk(this.state.username, this.state.password);
   },
   render() {
     const loginActions = [
       <FlatButton
         key={0} // for eslint
         label="Cancel"
-        onTouchTap={this.props.handleCancel}
+        onTouchTap={this.props.onHandleCancel}
         primary={true}
       />,
       <FlatButton

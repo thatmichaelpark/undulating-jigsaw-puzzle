@@ -34,7 +34,7 @@ const Puzzles = React.createClass({
   render() {
     const parseTimes = (times) => {
       const result = [];
-      const re = /(\d+),(\w+)/g;
+      const re = /(\d+),[\\\"]+([\w\s]+)[\\\"]+/g;
       let x;
       while (x = re.exec(times)) {
         result.push({

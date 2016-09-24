@@ -58,14 +58,14 @@ const Signup = React.createClass({
       }
       return this.setState({ errors: nextErrors });
     }
-    this.props.handleOk(this.state.username, this.state.password);
+    this.props.onHandleOk(this.state.username, this.state.password);
   },
   render() {
     const signupActions = [
       <FlatButton
         label="Cancel"
         primary={true}
-        onTouchTap={this.props.handleCancel}
+        onTouchTap={this.props.onHandleCancel}
       />,
       <FlatButton
         label="OK"
