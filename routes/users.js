@@ -14,7 +14,7 @@ const boom = require('boom');
 
 router.get('/users', (req, res, next) => {
   knex('users')
-    .select('username')
+    .select('username', 'id')
     .then((users) => {
       res.send(users);
     })
