@@ -1,13 +1,12 @@
 import AppBar from 'material-ui/AppBar';
-import axios from 'axios';
-import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import Login from 'components/Login'
+import Login from 'components/Login';
 import React from 'react';
-import Signup from 'components/Signup'
+import Signup from 'components/Signup';
 import Snackbar from 'material-ui/Snackbar';
-import { withRouter } from 'react-router';
+import axios from 'axios';
 import cookie from 'react-cookie';
+import { withRouter } from 'react-router';
 
 const Nav = React.createClass({
   getInitialState() {
@@ -37,8 +36,13 @@ const Nav = React.createClass({
   },
   handleLoginOk(username, password) {
     axios.post('/api/token', { username, password })
-      .then((result) => {
-        this.setState({ loggedIn: true, loginIsOpen: false, snackbarIsOpen: true, snackbarMessage: 'You have logged in' });
+      .then(() => {
+        this.setState({
+          loggedIn: true,
+          loginIsOpen: false,
+          snackbarIsOpen: true,
+          snackbarMessage: 'You have logged in'
+        });
         this.props.router.push('/puzzles');
       })
       .catch((err) => {
@@ -50,10 +54,10 @@ const Nav = React.createClass({
   },
   handleSignupOk(username, password) {
     axios.post('/api/users', { username, password })
-      .then((result) => {
-        return axios.post('/api/token', { username, password })
+      .then(() => {
+        return axios.post('/api/token', { username, password });
       })
-      .then((result) =>{
+      .then((result) => {
         const { userId } = result.data;
 
         this.setState({
@@ -76,11 +80,17 @@ const Nav = React.createClass({
   handleLogoutTouchTap() {
     axios.delete('/api/token')
       .then(() => {
-        this.setState({ loggedIn: false, username: null, userId: null, snackbarIsOpen: true, snackbarMessage: 'You have logged out' });
+        this.setState({
+          loggedIn: false,
+          username: null,
+          userId: null,
+          snackbarIsOpen: true,
+          snackbarMessage: 'You have logged out'
+        });
         this.props.router.push('/');
       })
       .catch((err) => {
-        console.log(err);
+        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
       });
   },
   handleSnackbarRequestClose() {
@@ -94,6 +104,7 @@ const Nav = React.createClass({
         lineHeight: '64px'
       }
     };
+
     return (
       <div>
         <AppBar
@@ -125,20 +136,20 @@ const Nav = React.createClass({
           {this.props.children}
         </div>
         <Login
-          handleCancel={this.handleLoginCancel}
-          handleOk={this.handleLoginOk}
+          onHandleCancel={this.handleLoginCancel}
+          onHandleOk={this.handleLoginOk}
           open={this.state.loginIsOpen}
         />
         <Signup
-          handleCancel={this.handleSignupCancel}
-          handleOk={this.handleSignupOk}
+          onHandleCancel={this.handleSignupCancel}
+          onHandleOk={this.handleSignupOk}
           open={this.state.signupIsOpen}
         />
         <Snackbar
-          open={this.state.snackbarIsOpen}
-          message={this.state.snackbarMessage}
           autoHideDuration={3000}
+          message={this.state.snackbarMessage}
           onRequestClose={this.handleSnackbarRequestClose}
+          open={this.state.snackbarIsOpen}
         />
       </div>
     );
