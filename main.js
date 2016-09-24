@@ -1,5 +1,7 @@
 // electron main
 
+'use strict';
+
 const electron = require('electron');
 
 const app = electron.app;
@@ -10,7 +12,7 @@ let mainWindow;
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow();
-  mainWindow.loadURL(`http://localhost:8000/`);
+  mainWindow.loadURL('http://localhost:8000/');
 
   const name = app.getName();
   const template = [
@@ -26,11 +28,11 @@ app.on('ready', () => {
         role: 'hide',
         accelerator: 'Cmd+H'
       }, {
-        label: `Hide Others`,
+        label: 'Hide Others',
         role: 'hideothers',
         accelerator: 'Alt+Cmd+H'
       }, {
-        label: `Show All`,
+        label: 'Show All',
         role: 'unhide'
       }, {
         type: 'separator'
@@ -42,11 +44,11 @@ app.on('ready', () => {
     }
   ];
 
-  const menu =  Menu.buildFromTemplate(template);
+  const menu = Menu.buildFromTemplate(template);
+
   Menu.setApplicationMenu(menu);
 
   mainWindow.on('closed', () => {
-    console.log('closed');
     mainWindow = null;
   });
 });
