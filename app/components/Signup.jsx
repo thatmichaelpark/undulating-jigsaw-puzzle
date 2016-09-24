@@ -8,7 +8,7 @@ const schema = Joi.object({
   username: Joi.string().trim().max(20),
   password: Joi.string().trim().max(50),
   confirmPassword: Joi.any().valid(Joi.ref('password')).options(
-    { language: { any: { allowOnly: 'must match password' } } })
+    { language: { any: { allowOnly: 'must match password' }}})
 });
 
 const Signup = React.createClass({
@@ -44,6 +44,7 @@ const Signup = React.createClass({
   },
   handleChange(event) {
     const { name, value } = event.target;
+
     this.setState({ [name]: value });
   },
   handleOk() {
@@ -51,11 +52,14 @@ const Signup = React.createClass({
       abortEarly: false,
       allowUnknown: true
     });
+
     if (result.error) {
       const nextErrors = [];
+
       for (const detail of result.error.details) {
         nextErrors[detail.path] = detail.message;
       }
+
       return this.setState({ errors: nextErrors });
     }
     this.props.onHandleOk(this.state.username, this.state.password);
@@ -63,32 +67,34 @@ const Signup = React.createClass({
   render() {
     const signupActions = [
       <FlatButton
+        key={0}
         label="Cancel"
-        primary={true}
         onTouchTap={this.props.onHandleCancel}
+        primary={true}
       />,
       <FlatButton
+        key={1}
         label="OK"
-        primary={true}
         onTouchTap={this.handleOk}
-      />,
+        primary={true}
+      />
     ];
 
     const { errors, username, password, confirmPassword } = this.state;
 
     return (
       <Dialog
-        title="Sign up to keep track of your solved puzzles"
         actions={signupActions}
         modal={true}
         open={this.props.open}
+        title="Sign up to keep track of your solved puzzles"
       >
         <TextField
-          autoFocus
+          autoFocus={true}
           errorText={errors.username}
           floatingLabelText="Username"
           fullWidth={true}
-          name='username'
+          name="username"
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           value={username}
@@ -97,7 +103,7 @@ const Signup = React.createClass({
           errorText={errors.password}
           floatingLabelText="Password"
           fullWidth={true}
-          name='password'
+          name="password"
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           type="password"
@@ -107,7 +113,7 @@ const Signup = React.createClass({
           errorText={errors.confirmPassword}
           floatingLabelText="Confirm password"
           fullWidth={true}
-          name='confirmPassword'
+          name="confirmPassword"
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           type="password"
