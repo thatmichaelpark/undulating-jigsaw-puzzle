@@ -1,7 +1,7 @@
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
-import React from 'react';
 import { Link } from 'react-router';
+import React from 'react';
 
 const PuzzleBar = React.createClass({
   render() {
@@ -10,7 +10,8 @@ const PuzzleBar = React.createClass({
       const minutes = Math.floor((timeInSeconds % 3600) / 60);
       const seconds = timeInSeconds % 60;
       const twoDigits = (a) => (a <= 9 ? '0' : '') + a;
-      return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`
+
+      return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
     };
     const styles = {
       flatButton: {
@@ -19,6 +20,7 @@ const PuzzleBar = React.createClass({
         lineHeight: '64px'
       }
     };
+
     return (
       <AppBar
         title={
@@ -34,15 +36,15 @@ const PuzzleBar = React.createClass({
       >
         <div>
           {
-            this.props.playing ?
-              <FlatButton
+            this.props.playing
+              ? <FlatButton
                 label="Pause"
                 onTouchTap={this.props.onPauseTouchTap}
                 style={styles.flatButton}
               />
             : null
           }
-          <Link to='/puzzles'>
+          <Link to="/puzzles">
             <FlatButton
               label="Return to puzzles"
               style={styles.flatButton}
