@@ -39,9 +39,8 @@ router.post('/users', (req, res, next) => {
       return knex('users')
         .insert(decamelizeKeys({ username, hashedPassword }), '*');
     })
-    .then((users) => {
-      const { username, id } = users[0];
-      res.send({ username, id });
+    .then(() => {
+      res.sendStatus(200);
     })
     .catch((err) => {
       next(err);

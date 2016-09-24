@@ -11,8 +11,8 @@ const { checkAuth } = require('./middleware');
 router.get('/puzzles_users', (req, res, next) => {
   knex('puzzles_users')
     .orderBy('id')
-    .then((puzzles_users) => {
-      res.send(camelizeKeys(puzzles_users));
+    .then((puzzlesUsers) => {
+      res.send(camelizeKeys(puzzlesUsers));
     })
     .catch((err) => {
       next(err);
@@ -22,6 +22,7 @@ router.get('/puzzles_users', (req, res, next) => {
 router.post('/puzzles_users/:puzzleId/:userId', checkAuth, (req, res, next) => {
   const { puzzleId, userId } = req.params;
   const { puzzleSolvingTime } = req.body;
+
   knex('puzzles_users')
     .insert(decamelizeKeys({ puzzleId, userId, puzzleSolvingTime }), '*')
     .then((result) => {
