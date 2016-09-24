@@ -37,7 +37,7 @@ const PuzzleBar = React.createClass({
             this.props.playing ?
               <FlatButton
                 label="Pause"
-                onTouchTap={this.props.handlePauseTouchTap}
+                onTouchTap={this.props.onPauseTouchTap}
                 style={styles.flatButton}
               />
             : null

@@ -1,10 +1,10 @@
 import Pause from 'components/Pause';
+import Puzzle from 'components/Puzzle';
 import PuzzleBar from 'components/PuzzleBar';
 import React from 'react';
-import Puzzle from 'components/Puzzle';
+import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
-import Snackbar from 'material-ui/Snackbar';
 
 const PuzzleParent = React.createClass({
   getInitialState() {
@@ -41,8 +41,8 @@ const PuzzleParent = React.createClass({
     .then((result) => {
       this.setState({
         quoteText: result.data.quoteText,
-        quoteAuthor: result.data.quoteAuthor ? result.data.quoteAuthor : 'Unknown'
-      })
+        quoteAuthor: result.data.quoteAuthor
+      });
     })
     .catch((err) => {
       this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
@@ -56,16 +56,27 @@ const PuzzleParent = React.createClass({
     this.setState({ playing: false });
     this.stopTimer();
     if (cookie.load('NQJ_loggedIn')) {
-      axios.post(`/api/puzzles_users/${this.props.params.puzzleId}/${cookie.load('NQJ_userId')}`, { puzzleSolvingTime: this.state.elapsedTime })
-      .then((result) => {
-        this.setState({ snackbarIsOpen: true, snackbarMessage: 'Solved! Your time has been recorded.' });
+      // eslint-disable-next-line prefer-template
+      const apiUrl = '/api/puzzles_users/' +
+        this.props.params.puzzleId + '/' +
+        cookie.load('NQJ_userId');
+
+      axios.post(apiUrl, { puzzleSolvingTime: this.state.elapsedTime })
+      .then(() => {
+        this.setState({
+          snackbarIsOpen: true,
+          snackbarMessage: 'Solved! Your time has been recorded.'
+        });
       })
       .catch((err) => {
         this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
-      })
+      });
     }
     else {
-      this.setState({ snackbarIsOpen: true, snackbarMessage: 'You have solved the puzzle!' });
+      this.setState({
+        snackbarIsOpen: true,
+        snackbarMessage: 'You have solved the puzzle!'
+      });
     }
   },
   handleSnackbarRequestClose() {
@@ -76,7 +87,7 @@ const PuzzleParent = React.createClass({
       <div>
         <PuzzleBar
           elapsedTime={this.state.elapsedTime}
-          handlePauseTouchTap={this.handlePauseTouchTap}
+          onPauseTouchTap={this.handlePauseTouchTap}
           playing={this.state.playing}
         />
         <Puzzle
@@ -85,16 +96,16 @@ const PuzzleParent = React.createClass({
           puzzleId={this.props.params.puzzleId}
         />
         <Pause
-          quoteText={this.state.quoteText}
-          quoteAuthor={this.state.quoteAuthor}
+          onResumeTouchTap={this.handleResumeTouchTap}
           paused={this.state.paused}
-          handleResumeTouchTap={this.handleResumeTouchTap}
+          quoteAuthor={this.state.quoteAuthor}
+          quoteText={this.state.quoteText}
         />
         <Snackbar
-          open={this.state.snackbarIsOpen}
-          message={this.state.snackbarMessage}
           autoHideDuration={3000}
+          message={this.state.snackbarMessage}
           onRequestClose={this.handleSnackbarRequestClose}
+          open={this.state.snackbarIsOpen}
         />
       </div>
     );

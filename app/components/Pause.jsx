@@ -13,7 +13,7 @@ const Pause = React.createClass({
           {this.props.quoteAuthor}
         </p>
         <RaisedButton
-          onTouchTap={this.props.handleResumeTouchTap}
+          onTouchTap={this.props.onResumeTouchTap}
         >
           Resume
         </RaisedButton>
