@@ -11,7 +11,7 @@ app.disable('x-powered-by');
 
 const morgan = require('morgan');
 
-switch(app.get('env')) { // enhanced process.env.NODE_ENV
+switch (app.get('env')) { // enhanced process.env.NODE_ENV
   case 'development':
     app.use(morgan('dev'));
     break;
@@ -57,7 +57,6 @@ app.use((_req, res) => {
 // eslint-disable-next-line max-params
 app.use((err, _req, res, _next) => {
   if (err.output && err.output.statusCode) {
-    console.log('server err', err.message);
     return res
       .status(err.output.statusCode)
       .set('Content-Type', 'text/plain')
