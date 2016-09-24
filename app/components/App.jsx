@@ -5,8 +5,8 @@ import Puzzles from 'components/Puzzles';
 import React from 'react';
 import Welcome from 'components/Welcome';
 
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
 const App = React.createClass({
   render() {
@@ -25,13 +25,3 @@ const App = React.createClass({
 });
 
 export default App;
-// import RaisedButton from 'material-ui/RaisedButton';
-// import React from 'react';
-//
-// const App = React.createClass({
-//   render() {
-//     return <RaisedButton label="Hello world" />;
-//   }
-// });
-//
-// export default App;

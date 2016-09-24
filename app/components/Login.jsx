@@ -36,6 +36,7 @@ const Login = React.createClass({
   },
   handleChange(event) {
     const { name, value } = event.target;
+
     this.setState({ [name]: value });
   },
   handleOk() {
@@ -43,11 +44,14 @@ const Login = React.createClass({
       abortEarly: false,
       allowUnknown: true
     });
+
     if (result.error) {
       const nextErrors = [];
+
       for (const detail of result.error.details) {
         nextErrors[detail.path] = detail.message;
       }
+
       return this.setState({ errors: nextErrors });
     }
     this.props.handleOk(this.state.username, this.state.password);
@@ -55,32 +59,34 @@ const Login = React.createClass({
   render() {
     const loginActions = [
       <FlatButton
+        key={0} // for eslint
         label="Cancel"
-        primary={true}
         onTouchTap={this.props.handleCancel}
+        primary={true}
       />,
       <FlatButton
+        key={1} // for eslint
         label="OK"
-        primary={true}
         onTouchTap={this.handleOk}
-      />,
+        primary={true}
+      />
     ];
 
-    const { errors, username, password, confirmPassword } = this.state;
+    const { errors, username, password } = this.state;
 
     return (
       <Dialog
-        title="Log in"
         actions={loginActions}
         modal={true}
         open={this.props.open}
+        title="Log in"
       >
         <TextField
-          autoFocus
+          autoFocus={true}
           errorText={errors.username}
           floatingLabelText="Username"
           fullWidth={true}
-          name='username'
+          name="username"
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           value={username}
@@ -89,7 +95,7 @@ const Login = React.createClass({
           errorText={errors.password}
           floatingLabelText="Password"
           fullWidth={true}
-          name='password'
+          name="password"
           onBlur={this.handleBlur}
           onChange={this.handleChange}
           type="password"
