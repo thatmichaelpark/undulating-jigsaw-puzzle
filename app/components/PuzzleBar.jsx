@@ -44,7 +44,7 @@ const PuzzleBar = React.createClass({
           }
           <Link to='/puzzles'>
             <FlatButton
-              label="Quit"
+              label="Return to puzzles"
               style={styles.flatButton}
             />
           </Link>

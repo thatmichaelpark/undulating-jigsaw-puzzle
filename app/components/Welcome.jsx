@@ -12,7 +12,7 @@ const Welcome = React.createClass({
   render() {
     const styles = {
       card: {
-        width: '18rem'
+        width: '15rem'
       },
       paper: {
         width: '70%',
@@ -52,11 +52,13 @@ const Welcome = React.createClass({
               </p>
               <div style={{
                 display: 'flex',
-                alignContent: 'center'
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}>
                 <Card style={styles.card} zDepth={0}>
                   <CardText>
-                    Left-click and drag pieces next to other pieces; if the pieces match, they'll click together.
+                    Left-click and drag pieces; if a piece is placed next to a piece
+                    with a match border, the pieces will click together.
                   </CardText>
                 </Card>
                 <Card style={styles.card} zDepth={0}>
