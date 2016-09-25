@@ -15,15 +15,17 @@ TO DO                                       DONE
 
                                             Sound
 
-Prevent spaces in usernames
-
                                             Refactor duplicate formatTime fn
 
+                                            Prevent spaces in usernames
+Testing
 Electron
 
-Responsive
 
-Testing
+
+Responsive
+Responsive menu
+
 
 Linting
 
