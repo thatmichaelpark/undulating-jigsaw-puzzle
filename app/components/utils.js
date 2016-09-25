@@ -163,8 +163,59 @@ const checkNeighbors = (puzzle, piece) => {
   return null;
 };
 
+const rotateGroupInit = function(puzzle, group) {
+  const spd = puzzle.state.sortedPieceData.slice(); // copy
+
+  group.forEach((piece) => {
+    piece.x0 = piece.x;   // save original x, y, rot
+    piece.y0 = piece.y;
+    piece.rot0 = piece.rot;
+  });
+  puzzle.setState({ sortedPieceData: spd });
+};
+const rotateGroupStep = function(puzzle, group, angle) {
+  // angle goes from 0 to 90 or -90
+  const spd = puzzle.state.sortedPieceData.slice(); // copy
+  const rads = angle * Math.PI / 180;
+  const sin = Math.sin(rads);
+  const cos = Math.cos(rads);
+
+  group.forEach((piece) => {
+    piece.rot = piece.rot0 + angle;
+    const dx = piece.x0 - puzzle.mx0;
+    const dy = piece.y0 - puzzle.my0;
+
+    piece.x = puzzle.mx0 + cos * dx - sin * dy;
+    piece.y = puzzle.my0 + sin * dx + cos * dy;
+  });
+  puzzle.setState({ sortedPieceData: spd });
+};
+const rotateGroupEnd = function(puzzle, group, angle) {
+  // angle === 90 or -90
+  const spd = puzzle.state.sortedPieceData.slice(); // copy
+
+  group.forEach((piece) => {
+    piece.rot = (piece.rot0 + angle + 360) % 360;
+    const dx = piece.x0 - puzzle.mx0;
+    const dy = piece.y0 - puzzle.my0;
+
+    if (angle === 90) {
+      piece.x = puzzle.mx0 - dy;
+      piece.y = puzzle.my0 + dx;
+    }
+    else {
+      piece.x = puzzle.mx0 + dy;
+      piece.y = puzzle.my0 - dx;
+    }
+  });
+  puzzle.setState({ sortedPieceData: spd });
+};
+
 exports.formatTime = formatTime;
 exports.hitTest = hitTest;
 exports.createWaveData = createWaveData;
 exports.generateWaves = generateWaves;
 exports.checkNeighbors = checkNeighbors;
+exports.rotateGroupInit = rotateGroupInit;
+exports.rotateGroupStep = rotateGroupStep;
+exports.rotateGroupEnd = rotateGroupEnd;

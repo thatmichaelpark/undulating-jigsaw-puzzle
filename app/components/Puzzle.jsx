@@ -1,4 +1,5 @@
-import { checkNeighbors, createWaveData, generateWaves, hitTest }
+import { checkNeighbors, createWaveData, generateWaves, hitTest,
+  rotateGroupEnd, rotateGroupInit, rotateGroupStep }
   from 'components/utils';
 import Piece from 'components/Piece';
 import React from 'react';
@@ -122,7 +123,7 @@ const Puzzle = React.createClass({
     this.setState({ time, verticalWaves, horizontalWaves });
 
     if (this.isRotating) {
-      const rotateTime = 0.5;
+      const rotateTime = 0.33;
       const easing = (tt) => {
         // after https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
         const ss = 1.70158;
@@ -132,12 +133,12 @@ const Puzzle = React.createClass({
       const dt = (this.time - this.rotateStartTime) / rotateTime;
 
       if (dt < 1) {
-        this.rotateGroupStep(this.clickedPiece.group,
+        rotateGroupStep(this, this.clickedPiece.group,
           this.rotateAngle * easing(dt));
       }
       else {
         this.isRotating = false;
-        this.rotateGroupEnd(this.clickedPiece.group, this.rotateAngle);
+        rotateGroupEnd(this, this.clickedPiece.group, this.rotateAngle);
       }
     }
     this.raf = requestAnimationFrame(this.tick);
@@ -163,54 +164,6 @@ const Puzzle = React.createClass({
 
       right.push(right.shift());
       spd = left.concat(right);
-    });
-    this.setState({ sortedPieceData: spd });
-  },
-
-  rotateGroupInit(group) {
-    const spd = this.state.sortedPieceData.slice(); // copy
-
-    group.forEach((piece) => {
-      piece.x0 = piece.x;   // save original x, y, rot
-      piece.y0 = piece.y;
-      piece.rot0 = piece.rot;
-    });
-    this.setState({ sortedPieceData: spd });
-  },
-  rotateGroupStep(group, angle) {
-    // angle goes from 0 to 90 or -90
-    const spd = this.state.sortedPieceData.slice(); // copy
-    const rads = angle * Math.PI / 180;
-    const sin = Math.sin(rads);
-    const cos = Math.cos(rads);
-
-    group.forEach((piece) => {
-      piece.rot = piece.rot0 + angle;
-      const dx = piece.x0 - this.mx0;
-      const dy = piece.y0 - this.my0;
-
-      piece.x = this.mx0 + cos * dx - sin * dy;
-      piece.y = this.my0 + sin * dx + cos * dy;
-    });
-    this.setState({ sortedPieceData: spd });
-  },
-  rotateGroupEnd(group, angle) {
-    // angle === 90 or -90
-    const spd = this.state.sortedPieceData.slice(); // copy
-
-    group.forEach((piece) => {
-      piece.rot = (piece.rot0 + angle + 360) % 360;
-      const dx = piece.x0 - this.mx0;
-      const dy = piece.y0 - this.my0;
-
-      if (angle === 90) {
-        piece.x = this.mx0 - dy;
-        piece.y = this.my0 + dx;
-      }
-      else {
-        piece.x = this.mx0 + dy;
-        piece.y = this.my0 - dx;
-      }
     });
     this.setState({ sortedPieceData: spd });
   },
@@ -262,7 +215,7 @@ const Puzzle = React.createClass({
           this.rotateStartTime = this.time;
           this.rotateAngle = event.shiftKey ? -90 : 90;
 
-          this.rotateGroupInit(this.clickedPiece.group);
+          rotateGroupInit(this, this.clickedPiece.group);
         }
         break;
       }
