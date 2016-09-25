@@ -7,34 +7,8 @@ const app = require('../server');
 const knex = require('../knex');
 const supertest = require('supertest');
 
-suite('binary routes', () => {
-  test('GET /binary', (done) => {
-    supertest(app)
-      .get('/binary')
-      .expect(200, '0')
-      .expect('Content-Type', /json/)
-      .end(done);
-  });
-
-  test('GET /binary/0', (done) => {
-    supertest(app)
-      .get('/binary/0')
-      .expect(200, '0')
-      .expect('Content-Type', /json/)
-      .end(done);
-  });
-
-  test('GET /binary/101010', (done) => {
-    supertest(app)
-      .get('/binary/101010')
-      .expect(200, '42')
-      .expect('Content-Type', /json/)
-      .end(done);
-  });
-});
-
 suite('users routes', () => {
-  before((done) => {
+  before((done) => { // eslint-disable-line no-undef
     knex.migrate.latest()
       .then(() => {
         done();
@@ -43,7 +17,7 @@ suite('users routes', () => {
         done(err);
       });
   });
-  beforeEach((done) => {
+  beforeEach((done) => { // eslint-disable-line no-undef
     knex.seed.run()
       .then(() => {
         done();
@@ -52,39 +26,37 @@ suite('users routes', () => {
         done(err);
       });
   });
-  test('GET /users', (done) => {
+  test('GET /api/users', (done) => {
     supertest(app)
-      .get('/users')
+      .get('/api/users')
+      .set('Accept', 'application/json, */*')
+      .expect('Content-Type', /json/)
       .expect(200, [{
         id: 1,
-        name: 'Stanley',
-        lucky_binary: '110'
-      }])
-      .expect('Content-Type', /json/)
-      .end(done);
-  });
-  test('GET /users/1', (done) => {
-    supertest(app)
-      .get('/users/1')
-      .expect(200, {
-        id: 1,
-        name: 'Stanley',
-        lucky_binary: '110'
-      })
-      .expect('Content-Type', /json/)
-      .end(done);
-  });
-  test('POST /users', (done) => {
-    supertest(app)
-      .post('/users')
-      .send({
-        name: "Lee Stan",
-        lucky_number: 9
-      })
-      .expect(200, {
+        username: 'user1'
+      }, {
         id: 2,
-        name: 'Lee Stan',
-        lucky_binary: '1001'
+        username: 'user2'
+      }, {
+        id: 3,
+        username: 'user3'
+      }, {
+        id: 4,
+        username: 'user4'
+      }])
+      .end(done);
+  });
+  test('POST /api/users', (done) => {
+    supertest(app)
+      .post('/api/users')
+      .set('Accept', 'application/json, */*')
+      .send({
+        username: 'StanLee',
+        password: 'password'
+      })
+      .expect(200, {
+        id: 5,
+        username: 'StanLee'
       })
       .expect('Content-Type', /json/)
       .then(() => {
@@ -93,5 +65,36 @@ suite('users routes', () => {
       .catch((err) => {
         done(err);
       });
-  })
+  });
+  test('POST /api/users (duplicate)', (done) => {
+    supertest(app)
+      .post('/api/users')
+      .set('Accept', 'application/json, */*')
+      .send({
+        username: 'StanLee',
+        password: 'password'
+      })
+      .expect(200, {
+        id: 5,
+        username: 'StanLee'
+      })
+      .expect('Content-Type', /json/)
+      .then(() => {
+        supertest(app)
+        .post('/api/users')
+        .set('Accept', 'application/json, */*')
+        .send({
+          username: 'StanLee',
+          password: 'password'
+        })
+        .expect(400, 'Username already exists')
+        .expect('Content-Type', /text/);
+      })
+      .then(() => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 });
