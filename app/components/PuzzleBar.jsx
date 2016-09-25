@@ -2,17 +2,10 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import React from 'react';
+import { formatTime } from 'components/utils';
 
 const PuzzleBar = React.createClass({
   render() {
-    const formatTime = (timeInSeconds) => {
-      const hours = Math.floor(timeInSeconds / 3600);
-      const minutes = Math.floor((timeInSeconds % 3600) / 60);
-      const seconds = timeInSeconds % 60;
-      const twoDigits = (a) => (a <= 9 ? '0' : '') + a;
-
-      return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
-    };
     const styles = {
       flatButton: {
         color: 'white',

@@ -1,6 +1,7 @@
 import { Card, CardMedia, CardText, CardTitle } from 'material-ui/Card';
 import { Table, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router';
+import { formatTime } from 'components/utils';
 import Nav from 'components/Nav';
 import React from 'react';
 import axios from 'axios';
@@ -43,14 +44,6 @@ const Puzzles = React.createClass({
       }
 
       return result;
-    };
-    const formatTime = (timeInSeconds) => {
-      const hours = Math.floor(timeInSeconds / 3600);
-      const minutes = Math.floor((timeInSeconds % 3600) / 60);
-      const seconds = timeInSeconds % 60;
-      const twoDigits = (a) => (a <= 9 ? '0' : '') + a;
-
-      return `${hours}:${twoDigits(minutes)}:${twoDigits(seconds)}`;
     };
     const makeCards = () =>
       this.state.puzzles.map((puzzle, index) => {
