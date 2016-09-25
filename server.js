@@ -71,7 +71,6 @@ app.use((err, _req, res, _next) => {
 
   // eslint-disable-next-line no-console
   console.error('error:', err);
-  console.error('error stack:', err.stack);
   res.sendStatus(500);
 });
 
