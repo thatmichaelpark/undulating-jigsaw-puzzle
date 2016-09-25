@@ -1,8 +1,9 @@
+import { checkNeighbors, createWaveData, generateWaves, hitTest }
+  from 'components/utils';
 import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-import { hitTest, createWaveData, generateWaves, checkNeighbors } from 'components/utils';
 
 const Puzzle = React.createClass({
 
@@ -10,76 +11,87 @@ const Puzzle = React.createClass({
     return {
       img: document.createElement('img'),
       imgLoaded: false,
-      time: 0,
+      time: 0
     };
   },
 
   componentDidMount() {
-    this.clickSound = new Audio('/sounds/178186__snapper4298__camera-click-nikon.wav');
+    this.clickSound =
+      new Audio('/sounds/178186__snapper4298__camera-click-nikon.wav');
 
     axios.get(`/api/puzzles/${this.props.puzzleId}`)
-      .then((result) =>{
-        this.nRows = result.data.nRows;
-        this.nCols = result.data.nCols;
-        this.maxWaveDepth = result.data.maxWaveDepth;
-        this.nWaves = result.data.nWaves;
-        this.maxFreq = result.data.maxFreq;
-        this.maxV = result.data.maxV;
-        this.backgroundColor = result.data.backgroundColor;
-        this.hasRotatedPieces = result.data.hasRotatedPieces;
-        this.pieceContentSize = result.data.pieceContentSize;
-        this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
+      .then((result) => {
+        (() => { // extract data
+          this.nRows = result.data.nRows;
+          this.nCols = result.data.nCols;
+          this.maxWaveDepth = result.data.maxWaveDepth;
+          this.nWaves = result.data.nWaves;
+          this.maxFreq = result.data.maxFreq;
+          this.maxV = result.data.maxV;
+          this.backgroundColor = result.data.backgroundColor;
+          this.hasRotatedPieces = result.data.hasRotatedPieces;
+          this.pieceContentSize = result.data.pieceContentSize;
+          this.pieceActualSize = this.pieceContentSize + 2 * this.maxWaveDepth;
+        })();
 
+        // eslint-disable-next-line react/no-find-dom-node
+        const bcr = ReactDOM.findDOMNode(this).getBoundingClientRect();
         const pieceDataArray = [];
         const sortedPieceData = [];
-        const { width, height } = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
         for (let row = 0; row < this.nRows; ++row) {
           const pieceDataRow = [];
 
-          for (let col = 0; col < this.nCols; ++col) {
-            const pieceData = {
-              row,
-              col,
-              x: Math.random() * width,
-              y: Math.random() * height,
-              rot: this.hasRotatedPieces ?
-                Math.floor(Math.random() * 4) * 90 :
-                0
-            };
+          (() => { // Build pieceDataRow
+            for (let col = 0; col < this.nCols; ++col) {
+              const pieceData = {
+                row,
+                col,
+                x: Math.random() * bcr.width,
+                y: Math.random() * bcr.height,
+                rot: this.hasRotatedPieces
+                ? Math.floor(Math.random() * 4) * 90
+                : 0
+              };
 
-            pieceData.group = [pieceData];
-            pieceDataRow.push(pieceData);
-            sortedPieceData.push(pieceData);
-          }
+              pieceData.group = [pieceData];
+              pieceDataRow.push(pieceData);
+              sortedPieceData.push(pieceData);
+            }
+          })();
           pieceDataArray.push(pieceDataRow);
         }
 
-        const waveHorizontalData = createWaveData(this.nRows, this.nWaves, this.maxWaveDepth, this.maxFreq, this.maxV);
-        const waveVerticalData = createWaveData(this.nCols, this.nWaves, this.maxWaveDepth, this.maxFreq, this.maxV);
-        const time = 0;
-        const verticalWaves = waveVerticalData.map((waveData) => {
-          return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
-        });
-        const horizontalWaves = waveHorizontalData.map((waveData) => {
-          return generateWaves(waveData, this.pieceContentSize, this.nCols, time);
-        });
+        (() => { // Generate wave arrays
+          const waveHorizontalData = createWaveData(this.nRows, this.nWaves,
+            this.maxWaveDepth, this.maxFreq, this.maxV);
+          const waveVerticalData = createWaveData(this.nCols, this.nWaves,
+            this.maxWaveDepth, this.maxFreq, this.maxV);
+          const verticalWaves = waveVerticalData.map((waveData) => {
+            return generateWaves(waveData, this.pieceContentSize, this.nRows,
+              0);
+          });
+          const horizontalWaves = waveHorizontalData.map((waveData) => {
+            return generateWaves(waveData, this.pieceContentSize, this.nCols,
+              0);
+          });
 
-        this.setState({
-          waveHorizontalData,
-          waveVerticalData,
-          pieceDataArray,
-          sortedPieceData,
-          verticalWaves,
-          horizontalWaves
-        });
+          this.setState({
+            waveHorizontalData, waveVerticalData, pieceDataArray,
+            sortedPieceData, verticalWaves, horizontalWaves
+          });
+        })();
 
-        this.state.img.src = result.data.imageUrl;
-        this.state.img.addEventListener('load', () => {
-          const { width, height } = this.state.img;
+        const img = this.state.img;
+
+        img.src = result.data.imageUrl;
+        img.addEventListener('load', () => {
+          const { width, height } = img;
           const scaleFactor = Math.min(
-            width / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nCols),
-            height / (this.maxWaveDepth * 2 + this.pieceContentSize * this.nRows)
+            width /
+              (this.maxWaveDepth * 2 + this.pieceContentSize * this.nCols),
+            height /
+              (this.maxWaveDepth * 2 + this.pieceContentSize * this.nRows)
           );
           const tileSize = this.pieceContentSize * scaleFactor;
 
@@ -88,13 +100,17 @@ const Puzzle = React.createClass({
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err); // eslint-disable-line no-console
       });
   },
 
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+  },
+
   tick(ms) {
-    const time = ms * 0.001;
-    this.time = time;
+    this.time = ms * 0.001;
+    const time = this.time;
 
     const verticalWaves = this.state.waveVerticalData.map((waveData) => {
       return generateWaves(waveData, this.pieceContentSize, this.nRows, time);
@@ -107,14 +123,17 @@ const Puzzle = React.createClass({
 
     if (this.isRotating) {
       const rotateTime = 0.5;
-      const easing = (t) => {
+      const easing = (tt) => {
         // after https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
-        const s = 1.70158;
-		    return (t = t - 1) * t * ((s + 1) * t + s) + 1;
+        const ss = 1.70158;
+
+        return (tt -= 1) * tt * ((ss + 1) * tt + ss) + 1;
       };
       const dt = (this.time - this.rotateStartTime) / rotateTime;
+
       if (dt < 1) {
-        this.rotateGroupStep(this.clickedPiece.group, this.rotateAngle * easing(dt));
+        this.rotateGroupStep(this.clickedPiece.group,
+          this.rotateAngle * easing(dt));
       }
       else {
         this.isRotating = false;
@@ -122,10 +141,6 @@ const Puzzle = React.createClass({
       }
     }
     this.raf = requestAnimationFrame(this.tick);
-  },
-
-  componentWillUnmount() {
-    cancelAnimationFrame(this.raf);
   },
 
   moveGroup(group, dx, dy) {
@@ -173,6 +188,7 @@ const Puzzle = React.createClass({
       piece.rot = piece.rot0 + angle;
       const dx = piece.x0 - this.mx0;
       const dy = piece.y0 - this.my0;
+
       piece.x = this.mx0 + cos * dx - sin * dy;
       piece.y = this.my0 + sin * dx + cos * dy;
     });
@@ -186,6 +202,7 @@ const Puzzle = React.createClass({
       piece.rot = (piece.rot0 + angle + 360) % 360;
       const dx = piece.x0 - this.mx0;
       const dy = piece.y0 - this.my0;
+
       if (angle === 90) {
         piece.x = this.mx0 - dy;
         piece.y = this.my0 + dx;
@@ -208,9 +225,11 @@ const Puzzle = React.createClass({
   time: 0,  // time in seconds based on requestAnimationFrame timer
 
   mouseCoords(event) {
+    // eslint-disable-next-line react/no-find-dom-node
     const div = ReactDOM.findDOMNode(this);
     const { left, top } = div.getBoundingClientRect();
     const { scrollLeft, scrollTop } = div;
+
     return {
       mx: event.clientX - left + scrollLeft,
       my: event.clientY - top + scrollTop
@@ -229,11 +248,12 @@ const Puzzle = React.createClass({
       const piece = sortedPieceData[i];
 
       if (hitTest(mx, my, piece, this.pieceContentSize)) {
-        // bring hit piece's group to top
-        this.clickedPiece = piece;
-        this.bringGroupToTop(this.clickedPiece.group);
-        this.mx0 = mx;
-        this.my0 = my;
+        (() => { // Bring hit pieces' group to top
+          this.clickedPiece = piece;
+          this.bringGroupToTop(this.clickedPiece.group);
+          this.mx0 = mx;
+          this.my0 = my;
+        })();
         if (event.buttons === 1) {
           this.isDragging = true;
         }
