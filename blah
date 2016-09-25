@@ -26,6 +26,8 @@ TO DO                                       DONE
                                             Electron (basic)
 
                                             Clear quotation
+                                            
+                                            Prevent leaving puzzle page prematurely?
 Responsive
 Responsive menu
 
@@ -33,6 +35,5 @@ Help
 
 Style quotation
 
-Prevent leaving puzzle page prematurely?
 Error messages not passing to client?
 Strange build error re server.test.js?

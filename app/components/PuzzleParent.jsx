@@ -5,6 +5,7 @@ import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
+import { withRouter } from 'react-router';
 
 const PuzzleParent = React.createClass({
   getInitialState() {
@@ -22,6 +23,14 @@ const PuzzleParent = React.createClass({
     this.timer = setInterval(() => {
       this.setState({ elapsedTime: this.state.elapsedTime + 1 });
     }, 1000);
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+  },
+  routerWillLeave(nextLocation) {
+    // return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide:
+    if (this.state.playing) {
+      return 'Puzzle is still unsolved! Are you sure you want to leave?';
+    }
   },
   componentWillUnmount() {
     if (this.timer) {
@@ -116,4 +125,4 @@ const PuzzleParent = React.createClass({
   }
 });
 
-export default PuzzleParent;
+export default withRouter(PuzzleParent);
