@@ -18,19 +18,21 @@ TO DO                                       DONE
                                             Refactor duplicate formatTime fn
 
                                             Prevent spaces in usernames
-Testing
-Electron
 
+                                            Testing
 
+                                            Linting
 
+                                            Electron (basic)
+
+                                            Clear quotation
 Responsive
 Responsive menu
 
-
-Linting
-
 Help
 
+Style quotation
 
 Prevent leaving puzzle page prematurely?
 Error messages not passing to client?
+Strange build error re server.test.js?

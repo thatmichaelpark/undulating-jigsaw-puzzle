@@ -36,7 +36,11 @@ const PuzzleParent = React.createClass({
   },
   handlePauseTouchTap() {
     this.stopTimer();
-    this.setState({ paused: true });
+    this.setState({
+      paused: true,
+      quoteText: '',
+      quoteAuthor: ''
+    });
     axios.get('http://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
     .then((result) => {
       this.setState({
