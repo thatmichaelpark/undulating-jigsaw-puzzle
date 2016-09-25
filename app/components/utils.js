@@ -43,6 +43,7 @@ const hitTest = function(mx, my, piece, pieceContentSize) {
       cy += dx;
       break;
   }
+
   // Here's where we'd figure out the piece's actual dimensions based on
   // the wavy borders; as it is now, we just assume a square.
   const left = 0;
