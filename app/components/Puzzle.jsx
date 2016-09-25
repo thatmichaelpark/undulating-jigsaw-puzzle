@@ -2,85 +2,7 @@ import Piece from 'components/Piece';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-
-const hitTest = function(mx, my, piece, pieceContentSize) {
-// mx, my: mouse coordinates
-// piece.x, piece.y: piece center coordinates
-// piece.rot: piece's rotation (0, 90, 180, or 270)
-// Return true if (mx, my) hits the piece.
-  const { x, y, rot } = piece;
-  const dx = mx - x;
-  const dy = my - y;
-  let cx = pieceContentSize / 2;
-  let cy = pieceContentSize / 2;
-
-  switch (rot) {
-    case 0:
-      cx += dx;
-      cy += dy;
-      break;
-    case 90:
-      cx += dy;
-      cy -= dx;
-      break;
-    case 180:
-      cx -= dx;
-      cy -= dy;
-      break;
-    default: // 270
-      cx -= dy;
-      cy += dx;
-      break;
-  }
-  const left = 0;
-  const right = pieceContentSize;
-  const top = 0;
-  const bottom = pieceContentSize;
-
-  return left < cx && cx < right && top < cy && cy < bottom;
-};
-
-const createWaveData = (nWaveData, nWaves, maxWaveDepth, maxFreq, maxV) => {
-  const waveData = [];
-
-  for (let i = 0; i <= nWaveData; ++i) {
-    const waveDatum = [];
-    let maxDepth = 0;
-
-    for (let k = 0; k < nWaves; ++k) {
-      const a = (Math.random() - 0.5);
-      const freq = Math.random() * maxFreq;
-      const v = (Math.random() - 0.5) * 2 * maxV;
-
-      maxDepth += Math.abs(a);
-      waveDatum.push({ a, freq, v });
-    }
-    for (let k = 0; k < nWaves; ++k) {
-      waveDatum[k].a *= maxWaveDepth / maxDepth;
-    }
-    waveData.push(waveDatum);
-  }
-
-  return waveData;
-};
-
-// eslint-disable-next-line max-params
-const generateWaves = (waveData, pieceSize, nPieces, time) => {
-  const result = [];
-
-  for (let i = 0; i < pieceSize * nPieces; ++i) {
-    const theta = i * Math.PI * 2 / pieceSize;
-    let sum = 0;
-
-    for (let k = 0; k < waveData.length; ++k) {
-      sum += waveData[k].a * Math.sin(waveData[k].freq * theta +
-        waveData[k].v * time);
-    }
-    result.push(sum * Math.sin(theta / 2));
-  }
-
-  return result;
-};
+import { hitTest, createWaveData, generateWaves, checkNeighbors } from 'components/utils';
 
 const Puzzle = React.createClass({
 
@@ -345,84 +267,6 @@ const Puzzle = React.createClass({
   },
 
   handleMouseUp() {
-    const checkNeighbor = (piece, drow, dcol) => {
-      const neighbor =
-        this.state.pieceDataArray[piece.row + drow][piece.col + dcol];
-
-      if (piece.group === neighbor.group) { // neighbor is in same group?
-        return null;
-      }
-      if (piece.rot !== neighbor.rot) { // different orientations?
-        return null;
-      }
-      let x = piece.x;
-      let y = piece.y;
-
-      switch (piece.rot) {
-        case 0:
-          x += dcol * this.pieceContentSize;
-          y += drow * this.pieceContentSize;
-          break;
-        case 90:
-          x -= drow * this.pieceContentSize;
-          y += dcol * this.pieceContentSize;
-          break;
-        case 180:
-          x -= dcol * this.pieceContentSize;
-          y -= drow * this.pieceContentSize;
-          break;
-        default: // 270
-          x += drow * this.pieceContentSize;
-          y -= dcol * this.pieceContentSize;
-          break;
-      }
-      const dx = neighbor.x - x;
-      const dy = neighbor.y - y;
-
-      if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
-        this.moveGroup(piece.group, dx, dy);
-
-        return neighbor;
-      }
-
-      return null;
-    };
-
-    const checkNeighbors = (piece) => {
-      const { row, col } = piece;
-
-      if (row > 0) {
-        const neighbor = checkNeighbor(piece, -1, 0);
-
-        if (neighbor) {
-          return neighbor;
-        }
-      }
-      if (row < this.nRows - 1) {
-        const neighbor = checkNeighbor(piece, 1, 0);
-
-        if (neighbor) {
-          return neighbor;
-        }
-      }
-      if (col > 0) {
-        const neighbor = checkNeighbor(piece, 0, -1);
-
-        if (neighbor) {
-          return neighbor;
-        }
-      }
-      if (col < this.nCols - 1) {
-        const neighbor = checkNeighbor(piece, 0, 1);
-
-        if (neighbor) {
-          return neighbor;
-        }
-      }
-
-      return null;
-    };
-
     if (this.isDragging) {
       // See if any piece in clickedPiece's group is adjacent to a piece
       // in another group; if so, combine groups.
@@ -430,7 +274,7 @@ const Puzzle = React.createClass({
 
       for (let i = 0; i < group.length; ++i) {
         const piece = group[i];
-        const neighbor = checkNeighbors(piece);
+        const neighbor = checkNeighbors(this, piece);
 
         if (neighbor) {
           this.clickSound.play();

@@ -1,10 +1,10 @@
 import { Card, CardMedia, CardText, CardTitle } from 'material-ui/Card';
 import { Table, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router';
-import { formatTime } from 'components/utils';
 import Nav from 'components/Nav';
 import React from 'react';
 import axios from 'axios';
+import { formatTime } from 'components/utils';
 
 const styles = {
   cards: {
