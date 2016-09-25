@@ -97,4 +97,21 @@ suite('users routes', () => {
         done(err);
       });
   });
+  test('POST /api/users (invalid username)', (done) => {
+    supertest(app)
+      .post('/api/users')
+      .set('Accept', 'application/json, */*')
+      .send({
+        username: 'Stan Lee',
+        password: 'password'
+      })
+      .expect(400, 'validation error')
+      .expect('Content-Type', /text/)
+      .then(() => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 });

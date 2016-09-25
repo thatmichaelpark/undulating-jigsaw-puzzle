@@ -8,9 +8,8 @@ const bcrypt = require('bcrypt-as-promised');
 const knex = require('../knex');
 const { decamelizeKeys } = require('humps');
 const boom = require('boom');
-
-// const ev = require('express-validation');
-// const validations = require('../validations/users');
+const ev = require('express-validation');
+const validations = require('../validations/users');
 
 router.get('/users', (req, res, next) => {
   knex('users')
@@ -23,7 +22,7 @@ router.get('/users', (req, res, next) => {
     });
 });
 
-router.post('/users', (req, res, next) => {
+router.post('/users', ev(validations.post), (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 

@@ -5,7 +5,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 
 const schema = Joi.object({
-  username: Joi.string().trim().max(20),
+  username: Joi.string().trim().token().max(20),
   password: Joi.string().trim().max(50)
 });
 

@@ -62,9 +62,16 @@ app.use((err, _req, res, _next) => {
       .set('Content-Type', 'text/plain')
       .send(err.message);
   }
+  else if (err.status) {
+    return res
+      .status(err.status)
+      .set('Content-Type', 'text/plain')
+      .send(err.message);
+  }
 
   // eslint-disable-next-line no-console
-  console.error(err.stack);
+  console.error('error:', err);
+  console.error('error stack:', err.stack);
   res.sendStatus(500);
 });
 
