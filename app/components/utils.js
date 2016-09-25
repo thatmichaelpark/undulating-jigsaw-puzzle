@@ -19,6 +19,12 @@ const hitTest = function(mx, my, piece, pieceContentSize) {
   let cx = pieceContentSize / 2;
   let cy = pieceContentSize / 2;
 
+  // The original plan was to check the mouse position against the piece's
+  // wavy borders, but it turned out that ignoring the waves and just
+  // assuming the piece to be a square worked well enough for hit detection,
+  // so the following code is unnecessary (since a rotated square is still
+  // a square). But I'm leaving it in in case I ever want to try the
+  // wavy border test.
   switch (rot) {
     case 0:
       cx += dx;
@@ -37,12 +43,14 @@ const hitTest = function(mx, my, piece, pieceContentSize) {
       cy += dx;
       break;
   }
+  // Here's where we'd figure out the piece's actual dimensions based on
+  // the wavy borders; as it is now, we just assume a square.
   const left = 0;
   const right = pieceContentSize;
   const top = 0;
   const bottom = pieceContentSize;
 
-  return left < cx && cx < right && top < cy && cy < bottom;
+  return left <= cx && cx < right && top <= cy && cy < bottom;
 };
 
 // eslint-disable-next-line max-params
