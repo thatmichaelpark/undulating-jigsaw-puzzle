@@ -16,6 +16,7 @@ const PuzzleBar = React.createClass({
 
     return (
       <AppBar
+        onLeftIconButtonTouchTap={this.props.onLeftIconButtonTouchTap}
         title={
           <div
             style={{

@@ -1,3 +1,5 @@
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 import Pause from 'components/Pause';
 import Puzzle from 'components/Puzzle';
 import PuzzleBar from 'components/PuzzleBar';
@@ -5,11 +7,12 @@ import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
-import { withRouter } from 'react-router';
+import { Link, withRouter } from 'react-router';
 
 const PuzzleParent = React.createClass({
   getInitialState() {
     return {
+      drawerIsOpen: false,
       elapsedTime: 0,
       playing: true,
       paused: false,
@@ -43,12 +46,17 @@ const PuzzleParent = React.createClass({
       this.timer = null;
     }
   },
+  handleReturnTouchTap() {
+    this.setState({ drawerIsOpen: false });
+    this.props.router.push('/puzzles');
+  },
   handlePauseTouchTap() {
     this.stopTimer();
     this.setState({
       paused: true,
       quoteText: '',
-      quoteAuthor: ''
+      quoteAuthor: '',
+      drawerIsOpen: false
     });
     axios.get('http://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
     .then((result) => {
@@ -95,11 +103,15 @@ const PuzzleParent = React.createClass({
   handleSnackbarRequestClose() {
     this.setState({ snackbarIsOpen: false });
   },
+  handleLeftIconButtonTouchTap(event) {
+    this.setState({ drawerIsOpen: !this.state.drawerIsOpen });
+  },
   render() {
     return (
       <div>
         <PuzzleBar
           elapsedTime={this.state.elapsedTime}
+          onLeftIconButtonTouchTap={this.handleLeftIconButtonTouchTap}
           onPauseTouchTap={this.handlePauseTouchTap}
           playing={this.state.playing}
         />
@@ -108,6 +120,15 @@ const PuzzleParent = React.createClass({
           paused={this.state.paused}
           puzzleId={this.props.params.puzzleId}
         />
+        <Drawer
+          docked={false}
+          width={200}
+          open={this.state.drawerIsOpen}
+          onRequestChange={(drawerIsOpen) => this.setState({drawerIsOpen})}
+        >
+          <MenuItem onTouchTap={this.handlePauseTouchTap}>Pause</MenuItem>
+          <MenuItem onTouchTap={this.handleReturnTouchTap}>Return to Puzzles</MenuItem>
+        </Drawer>
         <Pause
           onResumeTouchTap={this.handleResumeTouchTap}
           paused={this.state.paused}
