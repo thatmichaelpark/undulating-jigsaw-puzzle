@@ -76,15 +76,13 @@ const Puzzles = React.createClass({
                             <TableRowColumn>
                               {idx + 1}
                             </TableRowColumn>
+                            <TableRowColumn style={{ padding: 0 }}>
+                              {time.username}
+                            </TableRowColumn>
                             <TableRowColumn>
                               {formatTime(time.time)}
                             </TableRowColumn>
-                            <TableRowColumn>
-                              {time.username}
-                            </TableRowColumn>
-
                           </TableRow>
-
                         );
                       })}
                     </TableBody>

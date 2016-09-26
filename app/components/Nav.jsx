@@ -1,14 +1,14 @@
 import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import Login from 'components/Login';
+import MenuItem from 'material-ui/MenuItem';
 import React from 'react';
 import Signup from 'components/Signup';
 import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
 import { withRouter } from 'react-router';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 
 const Nav = React.createClass({
   getInitialState() {
@@ -99,8 +99,11 @@ const Nav = React.createClass({
   handleSnackbarRequestClose() {
     this.setState({ snackbarIsOpen: false });
   },
-  handleLeftIconButtonTouchTap(event) {
+  handleLeftIconButtonTouchTap() {
     this.setState({ drawerIsOpen: !this.state.drawerIsOpen });
+  },
+  handleDrawerRequestChange(open) {
+    this.setState({ drawerIsOpen: open });
   },
   render() {
     const styles = {
@@ -141,18 +144,27 @@ const Nav = React.createClass({
         </AppBar>
         <Drawer
           docked={false}
-          width={200}
+          onRequestChange={this.handleDrawerRequestChange}
           open={this.state.drawerIsOpen}
-          onRequestChange={(drawerIsOpen) => this.setState({drawerIsOpen})}
+          width={200}
         >
           {
             this.state.loggedIn
-              ?
-                <MenuItem onTouchTap={this.handleLogoutTouchTap}>Log Out</MenuItem>
-              : <div>
-                <MenuItem onTouchTap={this.handleSignupTouchTap}>Sign Up</MenuItem>
-                <MenuItem onTouchTap={this.handleLoginTouchTap}>Log In</MenuItem>
+              ? (
+              <MenuItem onTouchTap={this.handleLogoutTouchTap}>
+                Log Out
+              </MenuItem>
+              )
+              : (
+              <div>
+                <MenuItem onTouchTap={this.handleSignupTouchTap}>
+                  Sign Up
+                </MenuItem>
+                <MenuItem onTouchTap={this.handleLoginTouchTap}>
+                  Log In
+                </MenuItem>
               </div>
+              )
           }
         </Drawer>
         <div>

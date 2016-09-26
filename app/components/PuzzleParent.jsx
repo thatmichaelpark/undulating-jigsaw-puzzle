@@ -7,7 +7,7 @@ import React from 'react';
 import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
-import { Link, withRouter } from 'react-router';
+import { withRouter } from 'react-router';
 
 const PuzzleParent = React.createClass({
   getInitialState() {
@@ -28,16 +28,16 @@ const PuzzleParent = React.createClass({
     }, 1000);
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
   },
-  routerWillLeave(nextLocation) {
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  },
+  routerWillLeave() {
     // return false to prevent a transition w/o prompting the user,
     // or return a string to allow the user to decide:
     if (this.state.playing) {
       return 'Puzzle is still unsolved! Are you sure you want to leave?';
-    }
-  },
-  componentWillUnmount() {
-    if (this.timer) {
-      clearInterval(this.timer);
     }
   },
   stopTimer() {
@@ -103,8 +103,11 @@ const PuzzleParent = React.createClass({
   handleSnackbarRequestClose() {
     this.setState({ snackbarIsOpen: false });
   },
-  handleLeftIconButtonTouchTap(event) {
+  handleLeftIconButtonTouchTap() {
     this.setState({ drawerIsOpen: !this.state.drawerIsOpen });
+  },
+  handleDrawerRequestChange(open) {
+    this.setState({ drawerIsOpen: open });
   },
   render() {
     return (
@@ -122,12 +125,16 @@ const PuzzleParent = React.createClass({
         />
         <Drawer
           docked={false}
-          width={200}
+          onRequestChange={this.handleDrawerRequestChange}
           open={this.state.drawerIsOpen}
-          onRequestChange={(drawerIsOpen) => this.setState({drawerIsOpen})}
+          width={200}
         >
-          <MenuItem onTouchTap={this.handlePauseTouchTap}>Pause</MenuItem>
-          <MenuItem onTouchTap={this.handleReturnTouchTap}>Return to Puzzles</MenuItem>
+          <MenuItem onTouchTap={this.handlePauseTouchTap}>
+            Pause
+          </MenuItem>
+          <MenuItem onTouchTap={this.handleReturnTouchTap}>
+            Return to Puzzles
+          </MenuItem>
         </Drawer>
         <Pause
           onResumeTouchTap={this.handleResumeTouchTap}
