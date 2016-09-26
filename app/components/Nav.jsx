@@ -7,10 +7,13 @@ import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 import cookie from 'react-cookie';
 import { withRouter } from 'react-router';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 
 const Nav = React.createClass({
   getInitialState() {
     return {
+      drawerIsOpen: false,
       loggedIn: cookie.load('NQJ_loggedIn'),
       username: cookie.load('NQJ_username'),
       userId: cookie.load('NQJ_userId'),
@@ -96,6 +99,9 @@ const Nav = React.createClass({
   handleSnackbarRequestClose() {
     this.setState({ snackbarIsOpen: false });
   },
+  handleLeftIconButtonTouchTap(event) {
+    this.setState({ drawerIsOpen: !this.state.drawerIsOpen });
+  },
   render() {
     const styles = {
       flatButton: {
@@ -108,6 +114,7 @@ const Nav = React.createClass({
     return (
       <div>
         <AppBar
+          onLeftIconButtonTouchTap={this.handleLeftIconButtonTouchTap}
           onTitleTouchTap={this.handleTitleTouchTap}
           title="Not-Quite-Jigsaw Puzzles"
         >
@@ -132,6 +139,22 @@ const Nav = React.createClass({
             </div>
           )}
         </AppBar>
+        <Drawer
+          docked={false}
+          width={200}
+          open={this.state.drawerIsOpen}
+          onRequestChange={(drawerIsOpen) => this.setState({drawerIsOpen})}
+        >
+          {
+            this.state.loggedIn
+              ?
+                <MenuItem onTouchTap={this.handleLogoutTouchTap}>Log Out</MenuItem>
+              : <div>
+                <MenuItem onTouchTap={this.handleSignupTouchTap}>Sign Up</MenuItem>
+                <MenuItem onTouchTap={this.handleLoginTouchTap}>Log In</MenuItem>
+              </div>
+          }
+        </Drawer>
         <div>
           {this.props.children}
         </div>
