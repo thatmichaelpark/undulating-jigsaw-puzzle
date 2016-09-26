@@ -31,6 +31,8 @@ technologies include
 
 The puzzle uses HTML canvas elements, one element per puzzle piece.
 
+The desktop version uses Electron and Electron-packager.
+
 ## What was the most valuable piece of Customer feedback you received?
 
 Although we did not do formal user testing, my wife discovered a bug when usernames contain spaces. Spaces are now forbidden in usernames.

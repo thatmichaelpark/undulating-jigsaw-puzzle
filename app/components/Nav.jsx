@@ -119,7 +119,7 @@ const Nav = React.createClass({
         <AppBar
           onLeftIconButtonTouchTap={this.handleLeftIconButtonTouchTap}
           onTitleTouchTap={this.handleTitleTouchTap}
-          title="Not-Quite-Jigsaw Puzzles"
+          title="Undulating Jigsaw Puzzles"
         >
           {this.state.loggedIn ? (
             <FlatButton

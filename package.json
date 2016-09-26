@@ -1,9 +1,9 @@
 {
-  "name": "NotQuiteJigsawPuzzles",
-  "productName": "NQJP",
+  "name": "UndulatingJigsawPuzzles",
+  "productName": "Undulating Jigsaw Puzzles",
   "version": "0.1.0",
-  "author": "Michael Park",
-  "description": "Not-quite-jigsaw puzzles",
+  "author": "Michael Park (thatmichaelpark@gmail.com)",
+  "description": "Undulating jigsaw puzzles",
   "license": "MIT",
   "repository": {
     "type": "git",
