@@ -1,83 +1,40 @@
-# with-react-material
+# Undulating Jigsaw Puzzle
 
-Ryan Sobol's React and Material skeleton for Brunch
+An experimental variation on the jigsaw puzzle theme.
 
-## Dependencies
+## What problem does it solve?
 
-Install the [Brunch](http://brunch.io) package globally with NPM.
+This project solves the problem of needing something like a jigsaw puzzle that isn't quite a jigsaw puzzle.
 
-```shell
-npm install -g brunch
-```
+## Who has this problem?
 
-## Usage
+Jigsaw puzzle enthusiasts who are looking for a change.
 
-Create a new React application based on this Brunch skeleton and install its dependencies.
+## How does your project solve this problem?
 
-```shell
-brunch new path/to/app --skeleton ryansobol/with-react-material
-```
+This project solves the problem by displaying puzzles that have pieces with edges that undulate.
 
-The application's code lives in the `app` directory.
+## What web APIs did it use?
 
-```shell
-la app
-```
+When the user clicks the Pause button, a quotation is displayed. That quotation is retrieved via the Forismatic API.
 
-Static files are placed in the `app/assets` directory and are copied to the `public` directory on build.
+## What technologies did it use?
 
-```shell
-la app/assets
-```
+The front end is built with React.js and Material-ui.
+The back end is an Express.js server running on Node.js.
 
-React components are placed in the `app/components` directory and are combined into the `public/app.js` file on build.
+The server uses Knex.js to communicate with a PostgreSQL database. Ancillary
+technologies include
+- JSON Web Tokens for user authentication
+- the Axios promise-based HTTP library
+- bcrypt-as-promised, humps, etc.
 
-**NOTE:** Each React component lives in a module so can be shared with other modules using [ES6 module](https://hacks.mozilla.org/2015/08/es6-in-depth-modules/) syntax.
+The puzzle uses HTML canvas elements, one element per puzzle piece.
 
-```shell
-la app/components
-```
+## What was the most valuable piece of Customer feedback you received?
 
-CSS stylesheets are placed in the `app/styles` directory and are combined into the `public/app.css` file on build.
+Although we did not do formal user testing, my wife discovered a bug when usernames contain spaces. Spaces are now forbidden in usernames.
 
-```shell
-la app/styles
-```
+## What was the biggest technical challenge you had to overcome?
 
-On each build, the application's files are saved to the `public` directory and served by the HTTP server.
-
-```shell
-la public
-```
-
-Watch the project for changes and launch an HTTP server.
-
-**NOTE:** Press `Ctrl + C` to quit.
-
-```shell
-npm start
-```
-
-In a new Terminal tab, navigate back the the project directory.
-
-```shell
-cd path/to/app
-```
-
-Take a look at the `public` directory to see what Brunch created.
-
-```shell
-la public
-```
-
-Open the application in your default browser.
-
-```shell
-open http://localhost:8000/
-```
-
-## Resources
-
-- [Brunch](http://brunch.io)
-- [Material-UI](http://www.material-ui.com/)
-- [React](https://facebook.github.io/react/)
+Electron (not yet overcome)
