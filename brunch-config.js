@@ -22,6 +22,15 @@ module.exports = {
     }
   },
 
+  conventions: {
+    ignored: [
+      /test/,
+      /[\\/]_/,
+      /vendor[\\/]node[\\/]/,
+      /vendor[\\/](j?ruby-.*|bundle)[\\/]/
+    ]
+  },
+
   server: {
     command: 'nodemon --ignore app --ignore public server.js'
   }
