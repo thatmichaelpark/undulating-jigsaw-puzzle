@@ -60,10 +60,18 @@ const PuzzleParent = React.createClass({
     });
     axios.get('http://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
     .then((result) => {
-      this.setState({
-        quoteText: result.data.quoteText,
-        quoteAuthor: result.data.quoteAuthor
-      });
+      if (result.data.quoteText) {
+        this.setState({
+          quoteText: result.data.quoteText,
+          quoteAuthor: result.data.quoteAuthor
+        });
+      }
+      else { // Occasionally, forismatic returns malformed data.
+        this.setState({
+          quoteText: '(Quotations provided by Forismatic.com.)',
+          quoteAuthor: ''
+        });
+      }
     })
     .catch((err) => {
       this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
