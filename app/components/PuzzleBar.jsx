@@ -1,4 +1,5 @@
 import AppBar from 'material-ui/AppBar';
+import Dimensions from 'react-dimensions';
 import FlatButton from 'material-ui/FlatButton';
 import { Link } from 'react-router';
 import React from 'react';
@@ -17,6 +18,7 @@ const PuzzleBar = React.createClass({
     return (
       <AppBar
         onLeftIconButtonTouchTap={this.props.onLeftIconButtonTouchTap}
+        showMenuIconButton={this.props.containerWidth < 900}
         title={
           <div
             style={{
@@ -28,26 +30,30 @@ const PuzzleBar = React.createClass({
           </div>
         }
       >
-        <div>
-          {
-            this.props.playing
-              ? <FlatButton
-                label="Pause"
-                onTouchTap={this.props.onPauseTouchTap}
+        {this.props.containerWidth > 900 ? (
+          <div>
+            {
+              this.props.playing
+                ? <FlatButton
+                  label="Pause"
+                  onTouchTap={this.props.onPauseTouchTap}
+                  style={styles.flatButton}
+                />
+              : null
+            }
+            <Link to="/puzzles">
+              <FlatButton
+                label="Return to puzzles"
                 style={styles.flatButton}
               />
-            : null
-          }
-          <Link to="/puzzles">
-            <FlatButton
-              label="Return to puzzles"
-              style={styles.flatButton}
-            />
-          </Link>
-        </div>
+            </Link>
+          </div>
+        ) : (
+          null
+        )}
       </AppBar>
     );
   }
 });
 
-export default PuzzleBar;
+export default Dimensions()(PuzzleBar); // eslint-disable-line new-cap

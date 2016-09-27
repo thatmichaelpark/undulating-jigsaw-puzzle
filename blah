@@ -29,13 +29,16 @@ TO DO                                       DONE
 
                                             Prevent leaving puzzle page prematurely?
                                             Adjust table column width
+
+                                            Responsive
+                                            Responsive menu
+
+Responsive bugs: can't drag pieces(!), Start button disappears
+
 Right-click should bring to front
 
-Responsive
-Responsive menu
 Help
 
 Style quotation
 
 Error messages not passing to client?
-Strange build error re server.test.js?

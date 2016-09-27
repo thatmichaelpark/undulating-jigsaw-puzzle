@@ -1,4 +1,5 @@
 import { Card, CardText } from 'material-ui/Card';
+import Dimensions from 'react-dimensions';
 import Nav from 'components/Nav';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -12,15 +13,17 @@ const Welcome = React.createClass({
   render() {
     const styles = {
       card: {
-        width: '15rem'
+        width: this.props.containerWidth >= 700 ? (
+          `${this.props.containerWidth / 5}px`
+        ) : null
       },
       paper: {
-        width: '70%',
+        width: this.props.containerWidth >= 600 ? '70%' : null,
         display: 'flex',
         flexDirection: 'column',
-        flexWrap: 'wrap',
         justifyContent: 'space-around',
         alignItems: 'center',
+        overflow: 'auto',
         margin: '2rem auto',
         padding: '2rem'
       }
@@ -31,7 +34,9 @@ const Welcome = React.createClass({
         <Nav />
         <div
           style={{
-            backgroundImage: 'url(/images/27_haruhi_jigsaw_03.jpg)',
+            backgroundImage: this.props.containerWidth >= 600 ? (
+              'url(/images/27_haruhi_jigsaw_03.jpg)'
+            ) : null,
             position: 'absolute',
             top: '0',
             left: '0',
@@ -97,4 +102,4 @@ const Welcome = React.createClass({
   }
 });
 
-export default withRouter(Welcome);
+export default Dimensions()(withRouter(Welcome)); // eslint-disable-line new-cap

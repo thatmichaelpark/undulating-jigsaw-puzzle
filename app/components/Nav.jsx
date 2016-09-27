@@ -1,4 +1,5 @@
 import AppBar from 'material-ui/AppBar';
+import Dimensions from 'react-dimensions';
 import Drawer from 'material-ui/Drawer';
 import FlatButton from 'material-ui/FlatButton';
 import Login from 'components/Login';
@@ -105,7 +106,7 @@ const Nav = React.createClass({
   handleDrawerRequestChange(open) {
     this.setState({ drawerIsOpen: open });
   },
-  render() {
+  flatButtons() {
     const styles = {
       flatButton: {
         color: 'white',
@@ -114,33 +115,43 @@ const Nav = React.createClass({
       }
     };
 
+    if (this.props.containerWidth >= 700) {
+      if (this.state.loggedIn) {
+        return (
+          <FlatButton
+            label="Log Out"
+            onTouchTap={this.handleLogoutTouchTap}
+            style={styles.flatButton}
+          />
+        );
+      }
+
+      return (
+        <div>
+          <FlatButton
+            label="Sign Up"
+            onTouchTap={this.handleSignupTouchTap}
+            style={styles.flatButton}
+          />
+          <FlatButton
+            label="Log In"
+            onTouchTap={this.handleLoginTouchTap}
+            style={styles.flatButton}
+          />
+        </div>
+      );
+    }
+  },
+  render() {
     return (
       <div>
         <AppBar
           onLeftIconButtonTouchTap={this.handleLeftIconButtonTouchTap}
           onTitleTouchTap={this.handleTitleTouchTap}
+          showMenuIconButton={this.props.containerWidth < 700}
           title="Undulating Jigsaw Puzzles"
         >
-          {this.state.loggedIn ? (
-            <FlatButton
-              label="Log Out"
-              onTouchTap={this.handleLogoutTouchTap}
-              style={styles.flatButton}
-            />
-          ) : (
-            <div>
-              <FlatButton
-                label="Sign Up"
-                onTouchTap={this.handleSignupTouchTap}
-                style={styles.flatButton}
-              />
-              <FlatButton
-                label="Log In"
-                onTouchTap={this.handleLoginTouchTap}
-                style={styles.flatButton}
-              />
-            </div>
-          )}
+          {this.flatButtons()}
         </AppBar>
         <Drawer
           docked={false}
@@ -191,4 +202,4 @@ const Nav = React.createClass({
   }
 });
 
-export default withRouter(Nav);
+export default Dimensions()(withRouter(Nav)); // eslint-disable-line new-cap
