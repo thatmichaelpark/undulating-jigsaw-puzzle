@@ -24,7 +24,7 @@ const Welcome = React.createClass({
         justifyContent: 'space-around',
         alignItems: 'center',
         overflow: 'auto',
-        margin: '2rem auto',
+        margin: '64px 0 0',
         padding: '2rem'
       }
     };
