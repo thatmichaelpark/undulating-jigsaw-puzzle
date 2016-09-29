@@ -19,10 +19,6 @@ const Welcome = React.createClass({
       },
       paper: {
         width: this.props.containerWidth >= 600 ? '70%' : null,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
         overflow: 'auto',
         margin: '64px 0 0',
         padding: '2rem'
@@ -63,7 +59,6 @@ const Welcome = React.createClass({
               </p>
               <div
                 style={{
-                  outline: '3px solid red',
                   display: 'flex',
                   flexWrap: 'wrap',
                   justifyContent: 'center'
@@ -91,11 +86,16 @@ const Welcome = React.createClass({
                   </CardText>
                 </Card>
               </div>
-              <RaisedButton
-                label="Start"
-                onTouchTap={this.handleStartTouchTap}
-                primary={true}
-              />
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center'
+              }}>
+                <RaisedButton
+                  label="Start"
+                  onTouchTap={this.handleStartTouchTap}
+                  primary={true}
+                />
+              </div>
             </Paper>
           </div>
         </div>
