@@ -48,4 +48,25 @@ router.get('/puzzles/:id', (req, res, next) => {
     });
 });
 
+router.delete('/puzzles/:id', (req, res, next) => {
+  knex('puzzles')
+  .where('id', req.params.id)
+  .first()
+  .then((puzzle) => {
+    if (!puzzle) {
+      throw boom.create(400, 'Could not delete')
+    }
+    return knex('puzzles')
+      .del()
+      .where('id', req.params.id)
+      .then(() => {
+        delete puzzle.id;
+        res.send(puzzle);
+      });
+  })
+  .catch((err) => {
+    next(err);
+  });
+});
+
 module.exports = router;
