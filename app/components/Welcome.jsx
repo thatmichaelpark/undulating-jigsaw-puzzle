@@ -37,6 +37,7 @@ const Welcome = React.createClass({
             backgroundImage: this.props.containerWidth >= 600 ? (
               'url(/images/27_haruhi_jigsaw_03.jpg)'
             ) : null,
+            backgroundSize: 'cover',
             position: 'absolute',
             top: '0',
             left: '0',
