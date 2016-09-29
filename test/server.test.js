@@ -115,6 +115,25 @@ suite('users routes', () => {
         done(err);
       });
   });
+  test('PATCH /api/users/1', (done) => {
+    supertest(app)
+      .patch('/api/users/1')
+      .set('Accept', 'application/json, */*')
+      .send({
+        username: 'New',
+      })
+      .expect(200, {
+        id: 1,
+        username: 'New'
+      })
+      .expect('Content-Type', /json/)
+      .then(() => {
+        done();
+      })
+      .catch((err) => {
+        done(err);
+      });
+  });
 });
 
 suite('puzzles routes', () => {
