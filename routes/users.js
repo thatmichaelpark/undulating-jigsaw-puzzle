@@ -58,4 +58,24 @@ router.patch('/users/:id', ev(validations.patch), (req, res, next) => {
   });
 });
 
+router.delete('/users/:id', (req, res, next) => {
+  knex('users')
+  .where('id', req.params.id)
+  .first()
+  .then((user) => {
+    if (!user) {
+      throw boom.create(400, 'Could not delete')
+    }
+    return knex('users')
+      .del()
+      .where('id', req.params.id)
+      .then(() => {
+        res.send(user.username);
+      });
+  })
+  .catch((err) => {
+    next(err);
+  });
+});
+
 module.exports = router;
