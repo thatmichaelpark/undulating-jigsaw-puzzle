@@ -63,6 +63,7 @@ const Welcome = React.createClass({
               </p>
               <div
                 style={{
+                  outline: '3px solid red',
                   display: 'flex',
                   flexWrap: 'wrap',
                   justifyContent: 'center'
