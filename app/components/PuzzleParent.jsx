@@ -63,7 +63,7 @@ const PuzzleParent = React.createClass({
       if (result.data.quoteText) {
         this.setState({
           quoteText: result.data.quoteText,
-          quoteAuthor: result.data.quoteAuthor
+          quoteAuthor: `—${result.data.quoteAuthor}` // em dash
         });
       }
       else { // Occasionally, forismatic returns malformed data.
