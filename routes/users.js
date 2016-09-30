@@ -64,8 +64,9 @@ router.delete('/users/:id', (req, res, next) => {
   .first()
   .then((user) => {
     if (!user) {
-      throw boom.create(400, 'Could not delete')
+      throw boom.create(400, 'Could not delete');
     }
+
     return knex('users')
       .del()
       .where('id', req.params.id)

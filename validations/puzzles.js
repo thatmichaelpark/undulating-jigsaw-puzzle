@@ -3,7 +3,7 @@
 const Joi = require('joi');
 
 module.exports = {
-  post : {
+  post: {
     body: {
       imageUrl: Joi.string().required(),
       backgroundColor: Joi.string().required(),
@@ -17,7 +17,7 @@ module.exports = {
       maxV: Joi.number().min(0).required()
     }
   },
-  patch : {
+  patch: {
     body: {
       imageUrl: Joi.string().required(),
       backgroundColor: Joi.string().required(),
@@ -30,5 +30,5 @@ module.exports = {
       maxFreq: Joi.number().min(0).required(),
       maxV: Joi.number().min(0).required()
     }
-  },
+  }
 };

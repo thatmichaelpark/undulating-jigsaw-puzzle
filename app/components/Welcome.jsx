@@ -86,10 +86,12 @@ const Welcome = React.createClass({
                   </CardText>
                 </Card>
               </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center'
-              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center'
+                }}
+              >
                 <RaisedButton
                   label="Start"
                   onTouchTap={this.handleStartTouchTap}

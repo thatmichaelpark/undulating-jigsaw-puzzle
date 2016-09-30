@@ -8,6 +8,7 @@ const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
 const ev = require('express-validation');
 const validations = require('../validations/puzzles');
+const boom = require('boom');
 
 // GET /puzzles
 router.get('/puzzles', (req, res, next) => {
@@ -51,8 +52,6 @@ router.get('/puzzles/:id', (req, res, next) => {
 });
 
 router.post('/puzzles', ev(validations.post), (req, res, next) => {
-  const id = req.body.id;
-
   knex('puzzles')
     .insert(decamelizeKeys(req.body), '*')
     .then((result) => {
@@ -81,8 +80,9 @@ router.delete('/puzzles/:id', (req, res, next) => {
   .first()
   .then((puzzle) => {
     if (!puzzle) {
-      throw boom.create(400, 'Could not delete')
+      throw boom.create(400, 'Could not delete');
     }
+
     return knex('puzzles')
       .del()
       .where('id', req.params.id)
