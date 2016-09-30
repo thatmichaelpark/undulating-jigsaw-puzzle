@@ -151,6 +151,9 @@ const PuzzleParent = React.createClass({
           open={this.state.drawerIsOpen}
           width={200}
         >
+          <MenuItem onTouchTap={this.handleHelpTouchTap}>
+            Help
+          </MenuItem>
           <MenuItem onTouchTap={this.handlePauseTouchTap}>
             Pause
           </MenuItem>
