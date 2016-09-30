@@ -1,4 +1,5 @@
 import Drawer from 'material-ui/Drawer';
+import Help from 'components/Help';
 import MenuItem from 'material-ui/MenuItem';
 import Pause from 'components/Pause';
 import Puzzle from 'components/Puzzle';
@@ -14,6 +15,7 @@ const PuzzleParent = React.createClass({
     return {
       drawerIsOpen: false,
       elapsedTime: 0,
+      helping: false,
       playing: true,
       paused: false,
       quoteText: '',
@@ -50,6 +52,13 @@ const PuzzleParent = React.createClass({
     this.setState({ drawerIsOpen: false });
     this.props.router.push('/puzzles');
   },
+  handleHelpTouchTap() {
+    this.stopTimer();
+    this.setState({
+      helping: true,
+      drawerIsOpen: false
+    });
+  },
   handlePauseTouchTap() {
     this.stopTimer();
     this.setState({
@@ -79,6 +88,10 @@ const PuzzleParent = React.createClass({
   },
   handleResumeTouchTap() {
     this.setState({ paused: false });
+    this.componentDidMount(); // restart timer
+  },
+  handleCloseHelpTouchTap() {
+    this.setState({ helping: false });
     this.componentDidMount(); // restart timer
   },
   gameOver() {
@@ -122,6 +135,7 @@ const PuzzleParent = React.createClass({
       <div>
         <PuzzleBar
           elapsedTime={this.state.elapsedTime}
+          onHelpTouchTap={this.handleHelpTouchTap}
           onLeftIconButtonTouchTap={this.handleLeftIconButtonTouchTap}
           onPauseTouchTap={this.handlePauseTouchTap}
           playing={this.state.playing}
@@ -144,6 +158,10 @@ const PuzzleParent = React.createClass({
             Return to Puzzles
           </MenuItem>
         </Drawer>
+        <Help
+          helping={this.state.helping}
+          onCloseHelpTouchTap={this.handleCloseHelpTouchTap}
+        />
         <Pause
           onResumeTouchTap={this.handleResumeTouchTap}
           paused={this.state.paused}

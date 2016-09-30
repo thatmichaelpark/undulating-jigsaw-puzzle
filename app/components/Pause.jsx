@@ -1,5 +1,4 @@
 import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
 import React from 'react';
 
 const Pause = React.createClass({
@@ -10,7 +9,7 @@ const Pause = React.createClass({
         open={this.props.paused}
         onRequestClose={this.props.onResumeTouchTap}
       >
-        <div style={{fontSize: 36, fontFamily: "Courgette"}}>
+        <div style={{fontSize: 24, fontFamily: "Courgette"}}>
           <p style={{textAlign: 'center'}}>
             {this.props.quoteText}
           </p>
