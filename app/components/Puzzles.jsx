@@ -68,6 +68,7 @@ const Puzzles = React.createClass({
             {
               puzzle.times
                 ? <CardText>
+                  <CardTitle title="Best Times" />
                   <Table>
                     <TableBody displayRowCheckbox={false}>
                       {parseTimes(puzzle.times).slice(0, 3).map((time, idx) => {
