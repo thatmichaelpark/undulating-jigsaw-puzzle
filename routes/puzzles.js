@@ -5,7 +5,9 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const knex = require('../knex');
-const { camelizeKeys } = require('humps');
+const { camelizeKeys, decamelizeKeys } = require('humps');
+const ev = require('express-validation');
+const validations = require('../validations/puzzles');
 
 // GET /puzzles
 router.get('/puzzles', (req, res, next) => {
@@ -46,6 +48,31 @@ router.get('/puzzles/:id', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+});
+
+router.post('/puzzles', ev(validations.post), (req, res, next) => {
+  const id = req.body.id;
+
+  knex('puzzles')
+    .insert(decamelizeKeys(req.body), '*')
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.patch('/puzzles/:id', ev(validations.patch), (req, res, next) => {
+  knex('puzzles')
+  .update(decamelizeKeys(req.body), '*')
+  .where('id', req.params.id)
+  .then((puzzles) => {
+    res.send(puzzles[0]);
+  })
+  .catch((err) => {
+    next(err);
+  });
 });
 
 router.delete('/puzzles/:id', (req, res, next) => {
