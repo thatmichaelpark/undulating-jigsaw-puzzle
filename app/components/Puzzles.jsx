@@ -1,11 +1,11 @@
 import { Card, CardMedia, CardText, CardTitle } from 'material-ui/Card';
 import { Table, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
 import { Link } from 'react-router';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Nav from 'components/Nav';
 import React from 'react';
 import axios from 'axios';
 import { formatTime } from 'components/utils';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const muiTheme = getMuiTheme({
@@ -80,11 +80,14 @@ const Puzzles = React.createClass({
               {
                 puzzle.times
                   ? <CardText>
-                    <CardTitle title="Best Times" style={{ padding: 8, textAlign: 'center' }}/>
+                    <CardTitle
+                      style={{ padding: 8, textAlign: 'center' }}
+                      title="Best Times"
+                    />
                     <Table>
                       <TableBody displayRowCheckbox={false}>
-                        {parseTimes(puzzle.times).slice(0, 3).map((time, idx) => {
-                          return (
+                        {parseTimes(puzzle.times).slice(0, 3).map(
+                          (time, idx) => (
                             <TableRow key={idx}>
                               <TableRowColumn>
                                 {idx + 1}
@@ -96,8 +99,8 @@ const Puzzles = React.createClass({
                                 {formatTime(time.time)}
                               </TableRowColumn>
                             </TableRow>
-                          );
-                        })}
+                          )
+                        )}
                       </TableBody>
                     </Table>
                   </CardText>

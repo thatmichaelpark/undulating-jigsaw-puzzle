@@ -6,8 +6,8 @@ const Help = React.createClass({
     return (
       <Dialog
         modal={false}
-        open={this.props.helping}
         onRequestClose={this.props.onCloseHelpTouchTap}
+        open={this.props.helping}
       >
         <div>
           <ul>
