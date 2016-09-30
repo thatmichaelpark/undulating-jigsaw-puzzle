@@ -5,6 +5,17 @@ import Nav from 'components/Nav';
 import React from 'react';
 import axios from 'axios';
 import { formatTime } from 'components/utils';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+const muiTheme = getMuiTheme({
+  tableRow: {
+    height: 30
+  },
+  tableRowColumn: {
+    height: 30
+  }
+});
 
 const styles = {
   cards: {
@@ -65,32 +76,34 @@ const Puzzles = React.createClass({
                 <img src={puzzle.imageUrl} />
               </CardMedia>
             </Link>
-            {
-              puzzle.times
-                ? <CardText>
-                  <CardTitle title="Best Times" />
-                  <Table>
-                    <TableBody displayRowCheckbox={false}>
-                      {parseTimes(puzzle.times).slice(0, 3).map((time, idx) => {
-                        return (
-                          <TableRow key={idx}>
-                            <TableRowColumn>
-                              {idx + 1}
-                            </TableRowColumn>
-                            <TableRowColumn style={{ padding: 0 }}>
-                              {time.username}
-                            </TableRowColumn>
-                            <TableRowColumn>
-                              {formatTime(time.time)}
-                            </TableRowColumn>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </CardText>
-              : null
-            }
+            <MuiThemeProvider muiTheme={muiTheme}>
+              {
+                puzzle.times
+                  ? <CardText>
+                    <CardTitle title="Best Times" style={{ padding: 8, textAlign: 'center' }}/>
+                    <Table>
+                      <TableBody displayRowCheckbox={false}>
+                        {parseTimes(puzzle.times).slice(0, 3).map((time, idx) => {
+                          return (
+                            <TableRow key={idx}>
+                              <TableRowColumn>
+                                {idx + 1}
+                              </TableRowColumn>
+                              <TableRowColumn style={{ padding: 0 }}>
+                                {time.username}
+                              </TableRowColumn>
+                              <TableRowColumn>
+                                {formatTime(time.time)}
+                              </TableRowColumn>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </CardText>
+                : null
+              }
+            </MuiThemeProvider>
           </Card>
         );
       }
