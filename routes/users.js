@@ -22,6 +22,18 @@ router.get('/users', (req, res, next) => {
     });
 });
 
+router.get('/users/:id', (req, res, next) => {
+  knex('users')
+    .select('username', 'id')
+    .where('id', req.params.id)
+    .then((users) => {
+      res.send(users[0]);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 router.post('/users', ev(validations.post), (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -48,7 +60,7 @@ router.post('/users', ev(validations.post), (req, res, next) => {
 
 router.patch('/users/:id', ev(validations.patch), (req, res, next) => {
   knex('users')
-  .update(req.body, ['id', 'username'])
+  .update({ username: req.body.username }, ['id', 'username'])
   .where('id', req.params.id)
   .then((users) => {
     res.send(users[0]);
