@@ -10,10 +10,10 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const muiTheme = getMuiTheme({
   tableRow: {
-    height: 30
+    height: 24
   },
   tableRowColumn: {
-    height: 30
+    height: 24
   }
 });
 
@@ -81,7 +81,7 @@ const Puzzles = React.createClass({
                 puzzle.times
                   ? <CardText>
                     <CardTitle
-                      style={{ padding: 8, textAlign: 'center' }}
+                      style={{ paddingBottom: 6, paddingTop: 0, textAlign: 'center' }}
                       title="Best Times"
                     />
                     <Table>
