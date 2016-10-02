@@ -54,8 +54,8 @@ const Welcome = React.createClass({
             <Paper style={styles.paper} zDepth={0}>
               <p>
               An experimental variation on traditional jigsaw puzzles.
-              The pieces of these puzzles have borders that vary over time.
-              Different puzzles' borders vary at different rates.
+              The pieces of these puzzles have edges that vary over time.
+              Different puzzles' edges vary at different rates.
               </p>
               <div
                 style={{
@@ -67,7 +67,7 @@ const Welcome = React.createClass({
                 <Card style={styles.card} zDepth={0}>
                   <CardText>
                     Left-click and drag pieces; if a piece is placed next
-                    to a piece with a matching border, the pieces will
+                    to a piece with a matching edge, the pieces will
                     click together.
                   </CardText>
                 </Card>
