@@ -44,6 +44,9 @@ suite('users routes', () => {
       }, {
         id: 4,
         username: 'user4'
+      }, {
+        id: 5,
+        username: 'admin'
       }])
       .end(done);
   });
@@ -56,7 +59,7 @@ suite('users routes', () => {
         password: 'password'
       })
       .expect(200, {
-        id: 5,
+        id: 6,
         username: 'StanLee'
       })
       .expect('Content-Type', /json/)
@@ -76,7 +79,7 @@ suite('users routes', () => {
         password: 'password'
       })
       .expect(200, {
-        id: 5,
+        id: 6,
         username: 'StanLee'
       })
       .expect('Content-Type', /json/)

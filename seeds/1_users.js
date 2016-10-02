@@ -21,6 +21,10 @@ exports.seed = function(knex) {
         id: 4,
         username: 'user4',
         hashed_password: '$2a$12$E.M6IpGk9L1ka.uv5ICQHO1G8LsSWMd3CmCKRltliegQA9eIDZTIG'
+      }, {
+        id: 5,
+        username: 'admin',
+        hashed_password: '$2a$12$csU8mxexbBymJhy2YaF.6ug0fLFD5DrGD7TLSAzC3pOeuu/uPekCq'
       }]);
     })
     .then(() => {
