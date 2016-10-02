@@ -12,7 +12,7 @@ exports.up = function(knex) {
     table.integer('n_waves').notNullable().defaultTo(0);
     table.bool('has_rotated_pieces').notNullable().defaultTo(false);
     table.string('image_url').notNullable().defaultTo('');
-    table.string('background_color').notNullable().defaultTo('white');
+    table.string('background_color').notNullable().defaultTo('#ffffff');
     table.timestamps(true, true);
   });
 };

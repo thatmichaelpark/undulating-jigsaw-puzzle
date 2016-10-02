@@ -14,6 +14,7 @@ const boom = require('boom');
 // GET /puzzles
 router.get('/puzzles', (req, res, next) => {
   knex('puzzles')
+    .select(['id', 'image_url', 'n_rows', 'n_cols', 'background_color', 'has_rotated_pieces', 'n_waves', 'max_wave_depth', 'max_freq', 'max_v', 'piece_content_size'])
     .orderBy('id')
     .then((puzzles) => {
       res.send(camelizeKeys(puzzles));

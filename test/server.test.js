@@ -118,25 +118,6 @@ suite('users routes', () => {
         done(err);
       });
   });
-  test('PATCH /api/users/1', (done) => {
-    supertest(app)
-      .patch('/api/users/1')
-      .set('Accept', 'application/json, */*')
-      .send({
-        username: 'New',
-      })
-      .expect(200, {
-        id: 1,
-        username: 'New'
-      })
-      .expect('Content-Type', /json/)
-      .then(() => {
-        done();
-      })
-      .catch((err) => {
-        done(err);
-      });
-  });
 });
 
 suite('puzzles routes', () => {
@@ -172,110 +153,149 @@ suite('puzzles routes', () => {
         });
       })
       .expect(200, [
-        {
-          backgroundColor: '#db9276',
-          hasRotatedPieces: false,
-          id: 1,
-          imageUrl: '/images/seattle.jpg',
-          maxFreq: 2,
-          maxV: 0.5,
-          maxWaveDepth: 20,
-          nCols: 3,
-          nRows: 2,
-          nWaves: 3,
-          pieceContentSize: 200
-        },
-        {
-          backgroundColor: '#5979AF',
-          hasRotatedPieces: false,
-          id: 2,
-          imageUrl: '/images/clouds-06.jpg',
-          maxFreq: 5,
-          maxV: 0.5,
-          maxWaveDepth: 15,
-          nCols: 4,
-          nRows: 3,
-          nWaves: 3,
-          pieceContentSize: 150
-        },
-        {
-          backgroundColor: 'white',
-          hasRotatedPieces: false,
-          id: 3,
-          imageUrl: '/images/cat800.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 4,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 150
-        },
-        {
-          backgroundColor: '#D8780A',
-          hasRotatedPieces: true,
-          id: 4,
-          imageUrl: '/images/fractal-026.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 5,
-          nRows: 3,
-          nWaves: 2,
-          pieceContentSize: 150
-        },
-        {
-          backgroundColor: '#F2B5B5',
-          hasRotatedPieces: true,
-          id: 5,
-          imageUrl: '/images/JellyBellyBeans.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 5,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 120
-        },
-        {
-          backgroundColor: '#0F74FF',
-          hasRotatedPieces: true,
-          id: 6,
-          imageUrl: '/images/jellyfish.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 6,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 120
-        },
-        {
-          backgroundColor: '#EDD2AC',
-          hasRotatedPieces: true,
-          id: 7,
-          imageUrl: '/images/fractal-1119594_960_720.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 9,
-          nRows: 5,
-          nWaves: 3,
-          pieceContentSize: 100
-        },
-        {
-          backgroundColor: 'black',
-          hasRotatedPieces: true,
-          id: 8,
-          imageUrl: '/images/black.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 10,
-          nCols: 9,
-          nRows: 9,
-          nWaves: 3,
-          pieceContentSize: 50
-        }
+          {
+              "backgroundColor": "#db9276",
+              "hasRotatedPieces": false,
+              "id": 1,
+              "imageUrl": "/images/seattle.jpg",
+              "maxFreq": 2,
+              "maxV": 5,
+              "maxWaveDepth": 20,
+              "nCols": 3,
+              "nRows": 2,
+              "nWaves": 3,
+              "pieceContentSize": 200
+          },
+          {
+              "backgroundColor": "#5979AF",
+              "hasRotatedPieces": true,
+              "id": 2,
+              "imageUrl": "/images/clouds-06.jpg",
+              "maxFreq": 5,
+              "maxV": 2,
+              "maxWaveDepth": 25,
+              "nCols": 3,
+              "nRows": 2,
+              "nWaves": 3,
+              "pieceContentSize": 200
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 3,
+              "imageUrl": "/images/cat701.jpeg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 4,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 125
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 4,
+              "imageUrl": "/images/wave.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 6,
+              "nRows": 4,
+              "nWaves": 4,
+              "pieceContentSize": 125
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 5,
+              "imageUrl": "/images/abstract.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 8,
+              "nRows": 6,
+              "nWaves": 2,
+              "pieceContentSize": 85
+          },
+          {
+              "backgroundColor": "#D8780A",
+              "hasRotatedPieces": true,
+              "id": 6,
+              "imageUrl": "/images/fractal-026.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 5,
+              "nRows": 3,
+              "nWaves": 2,
+              "pieceContentSize": 150
+          },
+          {
+              "backgroundColor": "#F2B5B5",
+              "hasRotatedPieces": true,
+              "id": 7,
+              "imageUrl": "/images/JellyBellyBeans.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 5,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 120
+          },
+          {
+              "backgroundColor": "#0F74FF",
+              "hasRotatedPieces": true,
+              "id": 8,
+              "imageUrl": "/images/jellyfish.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 6,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 120
+          },
+          {
+              "backgroundColor": "#EDD2AC",
+              "hasRotatedPieces": true,
+              "id": 9,
+              "imageUrl": "/images/fractal-1119594_960_720.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 9,
+              "nRows": 5,
+              "nWaves": 3,
+              "pieceContentSize": 100
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 10,
+              "imageUrl": "/images/blank.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 10,
+              "nCols": 9,
+              "nRows": 9,
+              "nWaves": 3,
+              "pieceContentSize": 60
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": true,
+              "id": 11,
+              "imageUrl": "/images/blank.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 10,
+              "nCols": 9,
+              "nRows": 9,
+              "nWaves": 3,
+              "pieceContentSize": 60
+          }
       ])
       .end(done);
   });
@@ -285,118 +305,160 @@ suite('puzzles routes', () => {
       .set('Accept', 'application/json, */*')
       .expect('Content-Type', /json/)
       .expect(200, [
-        {
-          backgroundColor: '#db9276',
-          hasRotatedPieces: false,
-          id: 1,
-          imageUrl: '/images/seattle.jpg',
-          maxFreq: 2,
-          maxV: 0.5,
-          maxWaveDepth: 20,
-          nCols: 3,
-          nRows: 2,
-          nWaves: 3,
-          pieceContentSize: 200,
-          times: '{"(663,user4)","(664,user3)","(665,user2)","(666,user1)"}'
-        },
-        {
-          backgroundColor: '#5979AF',
-          hasRotatedPieces: false,
-          id: 2,
-          imageUrl: '/images/clouds-06.jpg',
-          maxFreq: 5,
-          maxV: 0.5,
-          maxWaveDepth: 15,
-          nCols: 4,
-          nRows: 3,
-          nWaves: 3,
-          pieceContentSize: 150,
-          times: '{"(666,user1)","(667,user2)","(668,user3)","(669,user4)"}'
-        },
-        {
-          backgroundColor: 'white',
-          hasRotatedPieces: false,
-          id: 3,
-          imageUrl: '/images/cat800.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 4,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 150,
-          times: null
-        },
-        {
-          backgroundColor: '#D8780A',
-          hasRotatedPieces: true,
-          id: 4,
-          imageUrl: '/images/fractal-026.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 5,
-          nRows: 3,
-          nWaves: 2,
-          pieceContentSize: 150,
-          times: null
-        },
-        {
-          backgroundColor: '#F2B5B5',
-          hasRotatedPieces: true,
-          id: 5,
-          imageUrl: '/images/JellyBellyBeans.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 5,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 120,
-          times: null
-        },
-        {
-          backgroundColor: '#0F74FF',
-          hasRotatedPieces: true,
-          id: 6,
-          imageUrl: '/images/jellyfish.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 6,
-          nRows: 4,
-          nWaves: 2,
-          pieceContentSize: 120,
-          times: '{"(661,user2)","(662,user4)","(666,user3)","(669,user1)"}'
-        },
-        {
-          backgroundColor: '#EDD2AC',
-          hasRotatedPieces: true,
-          id: 7,
-          imageUrl: '/images/fractal-1119594_960_720.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 20,
-          nCols: 9,
-          nRows: 5,
-          nWaves: 3,
-          pieceContentSize: 100,
-          times: null
-        },
-        {
-          backgroundColor: 'black',
-          hasRotatedPieces: true,
-          id: 8,
-          imageUrl: '/images/black.jpg',
-          maxFreq: 3,
-          maxV: 1,
-          maxWaveDepth: 10,
-          nCols: 9,
-          nRows: 9,
-          nWaves: 3,
-          pieceContentSize: 50,
-          times: null
-        }
+          {
+              "backgroundColor": "#db9276",
+              "hasRotatedPieces": false,
+              "id": 1,
+              "imageUrl": "/images/seattle.jpg",
+              "maxFreq": 2,
+              "maxV": 5,
+              "maxWaveDepth": 20,
+              "nCols": 3,
+              "nRows": 2,
+              "nWaves": 3,
+              "pieceContentSize": 200,
+              "times": "{\"(663,user4)\",\"(664,user3)\",\"(665,user2)\",\"(666,user1)\"}"
+          },
+          {
+              "backgroundColor": "#5979AF",
+              "hasRotatedPieces": true,
+              "id": 2,
+              "imageUrl": "/images/clouds-06.jpg",
+              "maxFreq": 5,
+              "maxV": 2,
+              "maxWaveDepth": 25,
+              "nCols": 3,
+              "nRows": 2,
+              "nWaves": 3,
+              "pieceContentSize": 200,
+              "times": "{\"(666,user1)\",\"(667,user2)\",\"(668,user3)\",\"(669,user4)\"}"
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 3,
+              "imageUrl": "/images/cat701.jpeg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 4,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 125,
+              "times": "{\"(661,user2)\",\"(662,user4)\",\"(666,user3)\",\"(669,user1)\"}"
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 4,
+              "imageUrl": "/images/wave.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 6,
+              "nRows": 4,
+              "nWaves": 4,
+              "pieceContentSize": 125,
+              "times": null
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 5,
+              "imageUrl": "/images/abstract.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 8,
+              "nRows": 6,
+              "nWaves": 2,
+              "pieceContentSize": 85,
+              "times": null
+          },
+          {
+              "backgroundColor": "#D8780A",
+              "hasRotatedPieces": true,
+              "id": 6,
+              "imageUrl": "/images/fractal-026.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 5,
+              "nRows": 3,
+              "nWaves": 2,
+              "pieceContentSize": 150,
+              "times": null
+          },
+          {
+              "backgroundColor": "#F2B5B5",
+              "hasRotatedPieces": true,
+              "id": 7,
+              "imageUrl": "/images/JellyBellyBeans.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 5,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 120,
+              "times": null
+          },
+          {
+              "backgroundColor": "#0F74FF",
+              "hasRotatedPieces": true,
+              "id": 8,
+              "imageUrl": "/images/jellyfish.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 6,
+              "nRows": 4,
+              "nWaves": 2,
+              "pieceContentSize": 120,
+              "times": null
+          },
+          {
+              "backgroundColor": "#EDD2AC",
+              "hasRotatedPieces": true,
+              "id": 9,
+              "imageUrl": "/images/fractal-1119594_960_720.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 20,
+              "nCols": 9,
+              "nRows": 5,
+              "nWaves": 3,
+              "pieceContentSize": 100,
+              "times": null
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": false,
+              "id": 10,
+              "imageUrl": "/images/blank.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 10,
+              "nCols": 9,
+              "nRows": 9,
+              "nWaves": 3,
+              "pieceContentSize": 60,
+              "times": null
+          },
+          {
+              "backgroundColor": "#ffffff",
+              "hasRotatedPieces": true,
+              "id": 11,
+              "imageUrl": "/images/blank.jpg",
+              "maxFreq": 3,
+              "maxV": 1,
+              "maxWaveDepth": 10,
+              "nCols": 9,
+              "nRows": 9,
+              "nWaves": 3,
+              "pieceContentSize": 60,
+              "times": null
+          }
       ])
       .end(done);
   });
