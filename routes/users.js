@@ -10,6 +10,7 @@ const { decamelizeKeys } = require('humps');
 const boom = require('boom');
 const ev = require('express-validation');
 const validations = require('../validations/users');
+const { checkAuth } = require('./middleware');
 
 router.get('/users', (req, res, next) => {
   knex('users')
@@ -58,7 +59,11 @@ router.post('/users', ev(validations.post), (req, res, next) => {
     });
 });
 
-router.patch('/users/:id', ev(validations.patch), (req, res, next) => {
+router.patch('/users/:id', checkAuth, ev(validations.patch), (req, res, next) => {
+  if (req.token.username !== 'admin') {
+    return next(boom.create(401, 'Not logged in as admin'));
+  }
+
   knex('users')
   .update({ username: req.body.username }, ['id', 'username'])
   .where('id', req.params.id)
@@ -70,7 +75,11 @@ router.patch('/users/:id', ev(validations.patch), (req, res, next) => {
   });
 });
 
-router.delete('/users/:id', (req, res, next) => {
+router.delete('/users/:id', checkAuth, (req, res, next) => {
+  if (req.token.username !== 'admin') {
+    return next(boom.create(401, 'Not logged in as admin'));
+  }
+
   knex('users')
   .where('id', req.params.id)
   .first()

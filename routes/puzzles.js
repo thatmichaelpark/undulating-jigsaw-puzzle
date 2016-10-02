@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('../knex');
 const { camelizeKeys, decamelizeKeys } = require('humps');
+const { checkAuth } = require('./middleware');
 const ev = require('express-validation');
 const validations = require('../validations/puzzles');
 const boom = require('boom');
@@ -51,7 +52,11 @@ router.get('/puzzles/:id', (req, res, next) => {
     });
 });
 
-router.post('/puzzles', ev(validations.post), (req, res, next) => {
+router.post('/puzzles', checkAuth, ev(validations.post), (req, res, next) => {
+  if (req.token.username !== 'admin') {
+    return next(boom.create(401, 'Not logged in as admin'));
+  }
+
   knex('puzzles')
     .insert(decamelizeKeys(req.body), '*')
     .then((result) => {
@@ -62,7 +67,11 @@ router.post('/puzzles', ev(validations.post), (req, res, next) => {
     });
 });
 
-router.patch('/puzzles/:id', ev(validations.patch), (req, res, next) => {
+router.patch('/puzzles/:id', checkAuth, ev(validations.patch), (req, res, next) => {
+  if (req.token.username !== 'admin') {
+    return next(boom.create(401, 'Not logged in as admin'));
+  }
+
   knex('puzzles')
   .update(decamelizeKeys(req.body), '*')
   .where('id', req.params.id)
@@ -74,7 +83,11 @@ router.patch('/puzzles/:id', ev(validations.patch), (req, res, next) => {
   });
 });
 
-router.delete('/puzzles/:id', (req, res, next) => {
+router.delete('/puzzles/:id', checkAuth, (req, res, next) => {
+  if (req.token.username !== 'admin') {
+    return next(boom.create(401, 'Not logged in as admin'));
+  }
+
   knex('puzzles')
   .where('id', req.params.id)
   .first()

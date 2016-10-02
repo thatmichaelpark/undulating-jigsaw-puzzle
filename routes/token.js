@@ -26,8 +26,11 @@ router.post('/token', (req, res, next) => {
       return bcrypt.compare(req.body.password, user.hashedPassword);
     })
     .then(() => {
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      });
+      const token = jwt.sign(
+        { username: req.body.username, userId: user.id },
+        process.env.JWT_SECRET,
+        {}
+      );
 
       res.cookie('NQJ_accessToken', token, {
         httpOnly: true,

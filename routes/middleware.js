@@ -9,7 +9,7 @@ const checkAuth = function(req, res, next) {
         return res.sendStatus(401);
       }
 
-      req.token = decoded; // Access the payload via req.token.userId
+      req.token = decoded; // Access the payload via req.token.userId etc
       next();
     }
   );
