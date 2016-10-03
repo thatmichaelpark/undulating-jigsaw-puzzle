@@ -33,6 +33,9 @@ The puzzle uses HTML canvas elements, one element per puzzle piece.
 
 Unit and integration tests were written using Mocha, Chai, and Supertest.
 
+A companion project, the [Undulating Jigsaw Editor](https://github.com/thatmichaelpark/undulating-jigsaw-editor), demonstrates
+using Electron to create a desktop application.
+
 ## What was the most valuable piece of Customer feedback you received?
 
 Although we did not do formal user testing, my wife discovered a bug when usernames contain spaces. Spaces are now forbidden in usernames.
