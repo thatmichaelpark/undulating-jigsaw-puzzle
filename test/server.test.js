@@ -34,16 +34,16 @@ suite('users routes', () => {
       .expect('Content-Type', /json/)
       .expect(200, [{
         id: 1,
-        username: 'user1'
+        username: 'ThePuzzler'
       }, {
         id: 2,
-        username: 'user2'
+        username: 'DanTheMan'
       }, {
         id: 3,
-        username: 'user3'
+        username: 'I<11Binary'
       }, {
         id: 4,
-        username: 'user4'
+        username: 'CAPS_LOCK'
       }, {
         id: 5,
         username: 'admin'
@@ -317,7 +317,7 @@ suite('puzzles routes', () => {
               "nRows": 2,
               "nWaves": 3,
               "pieceContentSize": 200,
-              "times": "{\"(663,user4)\",\"(664,user3)\",\"(665,user2)\",\"(666,user1)\"}"
+              "times": "{\"(663,CAPS_LOCK)\",\"(664,I<11Binary)\",\"(665,DanTheMan)\",\"(666,ThePuzzler)\"}"
           },
           {
               "backgroundColor": "#5979AF",
@@ -331,7 +331,7 @@ suite('puzzles routes', () => {
               "nRows": 2,
               "nWaves": 3,
               "pieceContentSize": 200,
-              "times": "{\"(666,user1)\",\"(667,user2)\",\"(668,user3)\",\"(669,user4)\"}"
+              "times": "{\"(666,ThePuzzler)\",\"(667,DanTheMan)\",\"(668,I<11Binary)\",\"(669,CAPS_LOCK)\"}"
           },
           {
               "backgroundColor": "#ffffff",
@@ -345,7 +345,7 @@ suite('puzzles routes', () => {
               "nRows": 4,
               "nWaves": 2,
               "pieceContentSize": 125,
-              "times": "{\"(661,user2)\",\"(662,user4)\",\"(666,user3)\",\"(669,user1)\"}"
+              "times": "{\"(661,DanTheMan)\",\"(662,CAPS_LOCK)\",\"(666,I<11Binary)\",\"(669,ThePuzzler)\"}"
           },
           {
               "backgroundColor": "#ffffff",
