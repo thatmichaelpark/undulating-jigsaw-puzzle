@@ -12,7 +12,13 @@ Jigsaw puzzle enthusiasts who are looking for a change.
 
 ## How does your project solve this problem?
 
-This project solves the problem by displaying puzzles that have pieces with undulating edges.
+This project solves the problem by displaying puzzles that have pieces with undulating edges. The user can drag and rotate pieces with the mouse. When matching pieces
+are placed next to each other, they snap together. When all pieces are snapped together,
+the puzzle is solved.
+
+The app keeps track of how long it takes to solve a puzzle. If the user has signed up
+and logged in, their time is saved; the best three times of all uses are listed on
+the puzzle's leader board.
 
 ## What web APIs did it use?
 
