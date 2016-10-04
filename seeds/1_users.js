@@ -15,7 +15,7 @@ exports.seed = function(knex) {
         hashed_password: '$2a$12$XlRjbeMG3ReiDgX/ntqWo.4tJil5JhXay72vV0ifwYpLWuu5PsAz6'
       }, {
         id: 3,
-        username: 'I<11Binary',
+        username: '0110111000',
         hashed_password: '$2a$12$.IXZkYf6AuRF82VD64M68ePRg6I0SqfOM686Y/duL8gL9Jo71xJQu'
       }, {
         id: 4,

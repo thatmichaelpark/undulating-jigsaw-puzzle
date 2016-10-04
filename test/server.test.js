@@ -40,7 +40,7 @@ suite('users routes', () => {
         username: 'DanTheMan'
       }, {
         id: 3,
-        username: 'I<11Binary'
+        username: '0110111000'
       }, {
         id: 4,
         username: 'CAPS_LOCK'
@@ -317,7 +317,7 @@ suite('puzzles routes', () => {
               "nRows": 2,
               "nWaves": 3,
               "pieceContentSize": 200,
-              "times": "{\"(663,CAPS_LOCK)\",\"(664,I<11Binary)\",\"(665,DanTheMan)\",\"(666,ThePuzzler)\"}"
+              "times": "{\"(663,CAPS_LOCK)\",\"(664,0110111000)\",\"(665,DanTheMan)\",\"(666,ThePuzzler)\"}"
           },
           {
               "backgroundColor": "#5979AF",
@@ -331,7 +331,7 @@ suite('puzzles routes', () => {
               "nRows": 2,
               "nWaves": 3,
               "pieceContentSize": 200,
-              "times": "{\"(666,ThePuzzler)\",\"(667,DanTheMan)\",\"(668,I<11Binary)\",\"(669,CAPS_LOCK)\"}"
+              "times": "{\"(666,ThePuzzler)\",\"(667,DanTheMan)\",\"(668,0110111000)\",\"(669,CAPS_LOCK)\"}"
           },
           {
               "backgroundColor": "#ffffff",
@@ -345,7 +345,7 @@ suite('puzzles routes', () => {
               "nRows": 4,
               "nWaves": 2,
               "pieceContentSize": 125,
-              "times": "{\"(661,DanTheMan)\",\"(662,CAPS_LOCK)\",\"(666,I<11Binary)\",\"(669,ThePuzzler)\"}"
+              "times": "{\"(661,DanTheMan)\",\"(662,CAPS_LOCK)\",\"(666,0110111000)\",\"(669,ThePuzzler)\"}"
           },
           {
               "backgroundColor": "#ffffff",
