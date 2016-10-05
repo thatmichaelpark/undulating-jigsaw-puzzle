@@ -67,7 +67,7 @@ const PuzzleParent = React.createClass({
       quoteAuthor: '',
       drawerIsOpen: false
     });
-    axios.get('http://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
+    axios.get('https://cors-anywhere.herokuapp.com/http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
     .then((result) => {
       if (result.data.quoteText) {
         this.setState({
