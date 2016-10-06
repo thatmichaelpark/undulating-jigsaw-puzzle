@@ -1,6 +1,6 @@
 # Undulating Jigsaw Puzzle
 
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/RrGJ9eWP-EI/0.jpg)](http://www.youtube.com/watch?v=RrGJ9eWP-EI)
+[![Undulating Jigsaw Puzzles on YouTube](http://img.youtube.com/vi/RrGJ9eWP-EI/0.jpg)](http://www.youtube.com/watch?v=RrGJ9eWP-EI)
 
 A variation on the jigsaw puzzle theme.
 
