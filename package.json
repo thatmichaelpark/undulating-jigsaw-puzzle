@@ -16,7 +16,7 @@
   "scripts": {
     "deploy": "rm -rf public; brunch build --production; surge public",
     "electron-packager": "electron-packager",
-    "heroku-postbuild": "knex migrate:latest; knex seed:run; brunch build",
+    "heroku-postbuild": "knex migrate:rollback; knex migrate:latest; knex seed:run; brunch build",
     "knex": "knex",
     "lint": "eslint --ext .js,.jsx --ignore-pattern public",
     "resetdb": "knex migrate:rollback; knex migrate:latest; knex seed:run",
