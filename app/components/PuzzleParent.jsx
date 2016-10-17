@@ -83,7 +83,8 @@ const PuzzleParent = React.createClass({
       }
     })
     .catch((err) => {
-      this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+      const msg = err.response ? err.response.data : err.message;
+      this.setState({ snackbarIsOpen: true, snackbarMessage: msg });
     });
   },
   handleResumeTouchTap() {
@@ -111,7 +112,8 @@ const PuzzleParent = React.createClass({
         });
       })
       .catch((err) => {
-        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+        const msg = err.response ? err.response.data : err.message;
+        this.setState({ snackbarIsOpen: true, snackbarMessage: msg });
       });
     }
     else {

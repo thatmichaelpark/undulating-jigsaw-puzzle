@@ -50,7 +50,8 @@ const Nav = React.createClass({
         this.props.router.push('/puzzles');
       })
       .catch((err) => {
-        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+        const msg = err.response ? err.response.data : err.message;
+        this.setState({ snackbarIsOpen: true, snackbarMessage: msg });
       });
   },
   handleLoginCancel() {
@@ -75,7 +76,8 @@ const Nav = React.createClass({
         this.props.router.push('/puzzles');
       })
       .catch((err) => {
-        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+        const msg = err.response ? err.response.data : err.message;
+        this.setState({ snackbarIsOpen: true, snackbarMessage: msg });
       });
   },
   handleSignupCancel() {
@@ -94,7 +96,8 @@ const Nav = React.createClass({
         this.props.router.push('/');
       })
       .catch((err) => {
-        this.setState({ snackbarIsOpen: true, snackbarMessage: err.message });
+        const msg = err.response ? err.response.data : err.message;
+        this.setState({ snackbarIsOpen: true, snackbarMessage: msg });
       });
   },
   handleSnackbarRequestClose() {
