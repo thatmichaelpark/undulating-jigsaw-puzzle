@@ -30,7 +30,7 @@ Unit and integration tests were written using Mocha, Chai, and Supertest.
 A companion project, the [Undulating Jigsaw Editor](https://github.com/thatmichaelpark/undulating-jigsaw-editor), demonstrates
 using Electron to create a desktop application.
 
-## Web APIs used?
+## Web APIs Used
 
 When the user clicks the Pause button, a quotation is displayed. That quotation is retrieved via the Forismatic API.
 
